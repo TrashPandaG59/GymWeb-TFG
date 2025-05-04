@@ -10,7 +10,7 @@ const prueba = async (name) => {
     const { data, error } = await supabase
       .from('clientes')
       .select('*')
-      // .eq('pokemonName', name)
+      .eq('nombre', name)
       .maybeSingle(); // .single() para obtener solo un resultado
 
     if (error) {
@@ -29,21 +29,12 @@ const prueba = async (name) => {
   }
 };
 
-const insertarUsuario = async () => {
+const insertarUsuario = async ( info ) => {
   try {
     const { data, error } = await supabase
       .from('clientes') // Cambia esto si tu tabla se llama diferente
       .insert([
-        {
-          nombre: 'dani',
-          apellidos: 'el dani',
-          email: 'dani@gmail.com',
-          telefono: '123456788',
-          fecha_nacimiento: '1025-05-04',
-          usuario: 'crotolamo',
-          contrasena: 'dani1234',
-          activo: true
-        }
+        info
       ]);
 
     if (error) {
@@ -57,5 +48,16 @@ const insertarUsuario = async () => {
 };
 
 
-console.log('prueba', await prueba('pepe'));
-console.log('prueba', await insertarUsuario());
+console.log('prueba', await prueba('dani1'));
+// console.log('prueba', await insertarUsuario(
+//   {
+//     nombre: 'dani1',
+//     apellidos: 'el dani1',
+//     email: 'dani1@gmail.com',
+//     telefono: '123456781',
+//     fecha_nacimiento: '1025-05-01',
+//     usuario: 'crotolamo1',
+//     contrasena: 'dani12341',
+//     activo: true
+//   }
+// ));
