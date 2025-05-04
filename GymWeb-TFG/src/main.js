@@ -1,6 +1,7 @@
 
 import { createApp } from 'vue'  // Crea la app Vue
 import { createPinia } from 'pinia'  // Para el manejo de estado
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 import App from './App.vue'  // Componente raíz
 import router from './router'  // Tus rutas
