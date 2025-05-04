@@ -51,8 +51,11 @@ export const buscarUser = async (name, pass) => {
   }
 };
 
-const insertarUsuario = async (info) => {
+export const insertarUsuario = async (info) => {
   try {
+
+    info.contrasena = await hashear(info.contrasena);
+    console.log('Insertando usuario:', info); // Imprimir la información del usuario a insertar
     const { data, error } = await supabase
       .from('clientes') // Cambia esto si tu tabla se llama diferente
       .insert([

@@ -45,7 +45,7 @@
   </template>
   
   <script setup>
-  import { buscarUser } from '@/server'
+  import { buscarUser, insertarUsuario } from '@/server'
   import '../assets/ComponentStyles/LoginModal.css'
   import { ref } from 'vue'
   
@@ -90,20 +90,37 @@
     if (contrasena.value !== confirmarContrasena.value) {
       alert('Las contraseñas no coinciden. Por favor, revísalas.')
       return
+    }else{
+      const info = {
+        nombre: nombre.value,
+        apellidos: apellidos.value,
+        email: email.value,
+        telefono: telefono.value,
+        fecha_nacimiento: fecha_nacimiento.value,
+        usuario: usuarioRegistro.value,
+        contrasena: contrasena.value
+      }
+      insertarUsuario(info)
+        .then(resultado => {
+          alert(resultado)
+        })
+        .catch(error => {
+          console.error('Error en el registro:', error)
+        })
     }
   
-    console.log('Datos de registro:')
-    console.log({
-      nombre: nombre.value,
-      apellidos: apellidos.value,
-      email: email.value,
-      telefono: telefono.value,
-      fecha_nacimiento: fecha_nacimiento.value,
-      usuario: usuarioRegistro.value,
-      contrasena: contrasena.value
-    })
+    // console.log('Datos de registro:')
+    // console.log({
+    //   nombre: nombre.value,
+    //   apellidos: apellidos.value,
+    //   email: email.value,
+    //   telefono: telefono.value,
+    //   fecha_nacimiento: fecha_nacimiento.value,
+    //   usuario: usuarioRegistro.value,
+    //   contrasena: contrasena.value
+    // })
   
-    alert('Te has registrado correctamente (demo)')
+    // alert('Te has registrado correctamente (demo)')
     cerrar()
   }
   </script>
