@@ -5,20 +5,23 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhkcmhueGp4cmx3eXBrYXJjbHNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYzNTAyODUsImV4cCI6MjA2MTkyNjI4NX0.H_VlradD7UPsP5zqqp0l5FxF6fdOWJwb6FIkILGVUXA'
 );
 
-const prueba = async (name) => {
+export const buscarUser = async (name, pass) => {
+  console.log('Buscando usuario:', name, pass); // Imprimir los parámetros de búsqueda
   try {
     const { data, error } = await supabase
       .from('clientes')
       .select('*')
       .eq('nombre', name)
+      .eq('contrasena', pass)
       .maybeSingle(); // .single() para obtener solo un resultado
 
     if (error) {
       console.error('Error al buscar usuario:', error.message);
       return false; // Si hay error, devuelve false
     } else if (data) {
-      // console.log('Usuario encontrado:', data.prompt); // Imprimir el usuario encontrado
-      return data; // Retorna el prompt si se encuentra
+      console.log('Usuario encontrado:', data.prompt); // Imprimir el usuario encontrado
+
+      return data.nombre; // Retorna el prompt si se encuentra
     } else {
       console.log('Usuario no encontrado');
       return false; // Si no se encuentra el usuario, devuelve false
@@ -47,8 +50,11 @@ const insertarUsuario = async ( info ) => {
   }
 };
 
+//  const login = async (name, pass) =>
+//   await buscarUser(name, pass);
 
-console.log('prueba', await prueba('dani1'));
+
+// console.log('prueba', await prueba('dani1'));
 // console.log('prueba', await insertarUsuario(
 //   {
 //     nombre: 'dani1',
