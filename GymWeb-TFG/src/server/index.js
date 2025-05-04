@@ -1,18 +1,37 @@
 import { createClient } from '@supabase/supabase-js';
 
+import bcrypt from 'bcryptjs';
+
+const hashear = async (password) => {
+  const phrase = 'Ensaimadas en mallas';
+  const base64Salt = btoa(phrase).slice(0, 22);
+  const manualSalt = `$2a$10$${base64Salt}`;
+
+  try {
+    const hash = await bcrypt.hash(password, manualSalt);
+    console.log('Contraseña hasheada con salt "Ensaimadas en mallas":', hash);
+    return hash;
+  } catch (err) {
+    console.error('Error al hashear la contraseña:', err);
+    return null;
+  }
+};
+
+
 const supabase = createClient(
   'https://hdrhnxjxrlwypkarclsn.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhkcmhueGp4cmx3eXBrYXJjbHNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYzNTAyODUsImV4cCI6MjA2MTkyNjI4NX0.H_VlradD7UPsP5zqqp0l5FxF6fdOWJwb6FIkILGVUXA'
 );
 
 export const buscarUser = async (name, pass) => {
-  console.log('Buscando usuario:', name, pass); // Imprimir los parámetros de búsqueda
+  const hashedPass = await hashear(pass);
+  console.log('Buscando usuario:', name, hashedPass); // Imprimir los parámetros de búsqueda
   try {
     const { data, error } = await supabase
       .from('clientes')
       .select('*')
       .eq('nombre', name)
-      .eq('contrasena', pass)
+      .eq('contrasena', hashedPass)
       .maybeSingle(); // .single() para obtener solo un resultado
 
     if (error) {
@@ -32,7 +51,7 @@ export const buscarUser = async (name, pass) => {
   }
 };
 
-const insertarUsuario = async ( info ) => {
+const insertarUsuario = async (info) => {
   try {
     const { data, error } = await supabase
       .from('clientes') // Cambia esto si tu tabla se llama diferente
@@ -50,20 +69,16 @@ const insertarUsuario = async ( info ) => {
   }
 };
 
-//  const login = async (name, pass) =>
-//   await buscarUser(name, pass);
 
-
-// console.log('prueba', await prueba('dani1'));
 // console.log('prueba', await insertarUsuario(
 //   {
-//     nombre: 'dani1',
+//     nombre: 'dani2',
 //     apellidos: 'el dani1',
-//     email: 'dani1@gmail.com',
+//     email: 'dani2@gmail.com',
 //     telefono: '123456781',
 //     fecha_nacimiento: '1025-05-01',
 //     usuario: 'crotolamo1',
-//     contrasena: 'dani12341',
+//     contrasena: await hashear('1234'),
 //     activo: true
 //   }
 // ));
