@@ -6,6 +6,14 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import App from './App.vue'  // Componente raíz
 import router from './router'  // Tus rutas
 
+import { gsap } from "gsap";
+    
+import { TextPlugin } from "gsap/TextPlugin";
+import { Draggable } from "gsap/Draggable";
+
+gsap.registerPlugin(TextPlugin);
+gsap.registerPlugin(Draggable)
+
 const app = createApp(App)
 
 app.use(createPinia())  // Usa Pinia
