@@ -1,23 +1,54 @@
 <template>
   <div class="home">
     <header class="hero">
+      <img src="../assets/img/logoZanshin.jpg" alt="Logo Zanshin" class="logo" />
       <h1>Zanshin Salud y Bienestar</h1>
-      <p class="tagline"  id="move">Transforma tu cuerpo, mente y espíritu con nosotros</p>
-      <button class="btn-primary" id="move" @click="mostrarModal = true">Iniciar sesión</button>
+      <p class="tagline">Transforma tu cuerpo, mente y espíritu con nosotros</p>
+      <button class="btn-primary" @click="mostrarModal = true">Iniciar sesión</button>
     </header>
 
-    <section class="features">
-      <div class="feature">
-        <h3>Entrenadores Profesionales</h3>
-        <p>Expertos certificados te acompañan en cada paso de tu camino hacia el bienestar.</p>
+    <section class="seccion entrenamiento">
+      <div class="contenido">
+        <div class="texto">
+          <h2>Entrenamiento Moderno</h2>
+          <p>Accede a instalaciones de última generación diseñadas para tu comodidad y seguridad.</p>
+          <ul>
+            <li>Equipamiento de última generación</li>
+            <li>Espacios amplios y ventilados</li>
+            <li>Planes de entrenamiento personalizados</li>
+          </ul>
+        </div>
+        <img src="../assets/fitness-room.jpg" alt="Sala de fitness moderna" class="imagen-seccion" />
       </div>
-      <div class="feature">
-        <h3>Equipamiento Moderno</h3>
-        <p>Accede a instalaciones de última generación diseñadas para tu comodidad y seguridad.</p>
+    </section>
+
+    <section class="seccion entrenadores">
+      <div class="contenido">
+        <div class="texto">
+          <h2>Entrenadores Profesionales</h2>
+          <p>Nuestro equipo está formado por expertos certificados listos para ayudarte a alcanzar tus metas.</p>
+          <ul>
+            <li>Certificaciones internacionales</li>
+            <li>Atención personalizada</li>
+            <li>Experiencia en diversas disciplinas</li>
+          </ul>
+        </div>
+        <img src="../assets/trainers.jpg" alt="Entrenadores del gimnasio" class="imagen-seccion" />
       </div>
-      <div class="feature">
-        <h3>Clases Integrales</h3>
-        <p>Yoga, Pilates, HIIT y más. Opciones para cuerpo y mente en todos los niveles.</p>
+    </section>
+
+    <section class="seccion clases">
+      <div class="contenido">
+        <div class="texto">
+          <h2>Clases Integrales</h2>
+          <p>Ofrecemos una amplia gama de clases diseñadas para todos los niveles y objetivos.</p>
+          <ul>
+            <li>Yoga, Pilates, HIIT, Spinning</li>
+            <li>Horarios flexibles</li>
+            <li>Ambiente motivador y de comunidad</li>
+          </ul>
+        </div>
+        <img src="../assets/classes.jpg" alt="Clase de yoga" class="imagen-seccion" />
       </div>
     </section>
 
