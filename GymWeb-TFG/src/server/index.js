@@ -23,14 +23,14 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhkcmhueGp4cmx3eXBrYXJjbHNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYzNTAyODUsImV4cCI6MjA2MTkyNjI4NX0.H_VlradD7UPsP5zqqp0l5FxF6fdOWJwb6FIkILGVUXA'
 );
 
-export const buscarUser = async (name, pass) => {
+export const buscarUser = async (username, pass) => {
   const hashedPass = await hashear(pass);
-  console.log('Buscando usuario:', name, hashedPass); // Imprimir los parámetros de búsqueda
+  console.log('Buscando usuario:', username, hashedPass); // Imprimir los parámetros de búsqueda
   try {
     const { data, error } = await supabase
-      .from('clientes')
+      .from('v_validar_usuario')
       .select('*')
-      .eq('nombre', name)
+      .eq('usuario', username)
       .eq('contrasena', hashedPass)
       .maybeSingle(); // .single() para obtener solo un resultado
 
@@ -38,9 +38,9 @@ export const buscarUser = async (name, pass) => {
       console.error('Error al buscar usuario:', error.message);
       return false; // Si hay error, devuelve false
     } else if (data) {
-      console.log('Usuario encontrado:', data.prompt); // Imprimir el usuario encontrado
+      console.log('Usuario encontrado:', data.usuario); // Imprimir el usuario encontrado
 
-      return data.nombre; // Retorna el prompt si se encuentra
+      return data; // Retorna el prompt si se encuentra
     } else {
       console.log('Usuario no encontrado');
       return false; // Si no se encuentra el usuario, devuelve false
@@ -57,10 +57,15 @@ export const insertarUsuario = async (info) => {
     info.contrasena = await hashear(info.contrasena);
     console.log('Insertando usuario:', info); // Imprimir la información del usuario a insertar
     const { data, error } = await supabase
-      .from('clientes') // Cambia esto si tu tabla se llama diferente
-      .insert([
-        info
-      ]);
+    .rpc('p_alta_cliente', {
+      c_apellidos: info.apellidos,
+      c_contrasena: info.contrasena,
+      c_email: info.email,
+      c_fecha_nacimiento: info.fecha_nacimiento,
+      c_nombre: info.nombre,
+      c_telefono: info.telefono,
+      c_usuario: info.usuario
+  });
 
     if (error) {
       console.error('Error al guardar el usuario:', error.message);

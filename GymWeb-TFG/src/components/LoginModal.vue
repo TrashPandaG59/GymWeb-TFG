@@ -67,7 +67,7 @@
   
     buscarUser(usuario.value, password.value)
       .then(resultado => {
-        alert(resultado)
+        alert(resultado.rol_nombre)
       })
       .catch(error => {
         console.error('Error en el login:', error)
