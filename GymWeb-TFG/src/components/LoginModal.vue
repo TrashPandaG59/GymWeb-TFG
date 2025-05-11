@@ -68,6 +68,11 @@
     buscarUser(usuario.value, password.value)
       .then(resultado => {
         alert(resultado.rol_nombre)
+        if (resultado.tipo_usuario === 'Cliente'){
+          router.push({ path: '/clientes' })
+        } else {
+          router.push({ path: '/personal' })
+        }
       })
       .catch(error => {
         console.error('Error en el login:', error)
