@@ -2,16 +2,18 @@
 import Fichaje from '../components/Fichaje.vue'
 import ListaClases from '../components/ListaClases.vue'
 import CalendarioClases from '../components/CalendarioClases.vue'
-
+import Inventario from '../components/Inventario.vue'
 import { ref } from 'vue'
 
 const endpoints = [
     { name: 'Fichar', component: Fichaje },
     { name: 'Clases', component: ListaClases },
-    { name: 'Calendario', component: CalendarioClases }
+    { name: 'Calendario', component: CalendarioClases },
+    { name: 'Inventario', component: Inventario },
 ];
 
 const currentComponent = ref(Fichaje);
+
 </script>
 
 <template>

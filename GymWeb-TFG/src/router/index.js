@@ -17,6 +17,11 @@ const routes = [
     component: PersonalView
   },
   {
+    path: '/personal_limitado',
+    name: 'personallimitado',
+    component: () => import('../views/PersonalView_limitado.vue')
+  },
+  {
     path: '/personal/:username',
     name: 'usuario_personal',
     component: PerfilPersonalView

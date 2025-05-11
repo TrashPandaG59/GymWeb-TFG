@@ -3,18 +3,23 @@ import Fichaje from '../components/Fichaje.vue'
 import ListaClases from '../components/ListaClases.vue'
 import CalendarioClases from '../components/CalendarioClases.vue'
 import Inventario from '../components/Inventario.vue'
+import ListadoClientes from '../components/ListadoClientes.vue'
+import ListadoEmpleados from '../components/ListadoEmpleados.vue'
+import { ref } from 'vue'
 
 const endpoints = [
     { name: 'Fichar', component: Fichaje },
     { name: 'Clases', component: ListaClases },
     { name: 'Calendario', component: CalendarioClases },
     { name: 'Inventario', component: Inventario },
+    
     // Lo ve solo el gerente y los administradores
     { name: 'ListadoClientes', component: ListadoClientes },
     { name: 'ListadoEmpleados', component: ListadoEmpleados },
 ];
 
-const currentComponent = ref(Fichar);
+const currentComponent = ref(Fichaje);
+
 </script>
 
 <template>

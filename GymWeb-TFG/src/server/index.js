@@ -38,7 +38,9 @@ export const buscarUser = async (username, pass) => {
       console.error('Error al buscar usuario:', error.message);
       return false; // Si hay error, devuelve false
     } else if (data) {
-      console.log('Usuario encontrado:', data.usuario); // Imprimir el usuario encontrado
+      console.log('Usuario encontrado:', data.usuario);
+      console.log('Usuario ROLL:', data.rol_nombre);
+      console.log('DATA:', data);
 
       return data; // Retorna el prompt si se encuentra
     } else {
@@ -77,6 +79,30 @@ export const insertarUsuario = async (info) => {
   }
 };
 
+
+export const listarTodo = async (roll) => {
+  try {
+    const { data, error } = await supabase
+      .from(roll)
+      .select('*')
+      // .maybeSingle(); // .single() para obtener solo un resultado
+
+    if (error) {
+      console.error('Error al buscar usuario:', error.message);
+      return false; // Si hay error, devuelve false
+    } else if (data) {
+      console.log('Usuario encontrado:', data); // Imprimir el usuario encontrado
+
+      return data; // Retorna el prompt si se encuentra
+    } else {
+      console.log('Usuario no encontrado');
+      return false; // Si no se encuentra el usuario, devuelve false
+    }
+  } catch (err) {
+    console.error('Error:', err.message);
+    return false; // En caso de error en la ejecución, devuelve false
+  }
+};
 
 // console.log('prueba', await insertarUsuario(
 //   {

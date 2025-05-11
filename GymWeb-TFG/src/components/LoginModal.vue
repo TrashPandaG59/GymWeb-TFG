@@ -48,6 +48,7 @@
   import { buscarUser, insertarUsuario } from '@/server'
   import '../assets/ComponentStyles/LoginModal.css'
   import { ref } from 'vue'
+  import router from '@/router'
   
   const emit = defineEmits(['close'])
   
@@ -67,11 +68,17 @@
   
     buscarUser(usuario.value, password.value)
       .then(resultado => {
-        alert(resultado.rol_nombre)
-        if (resultado.tipo_usuario === 'Cliente'){
+        console.log('ResultadoAAA:', resultado)
+        console.log("resultado.rol_nombre: ",resultado.rol_nombre)
+        console.log(resultado.tipo_usuario)
+        if (resultado.tipo_usuario === 'CLIENTE') {
           router.push({ path: '/clientes' })
         } else {
-          router.push({ path: '/personal' })
+          if(resultado.rol_nombre === 'ENTRENADOR'){
+            router.push({ path: '/personal_limitado' })
+          }else if(resultado.rol_nombre === 'ADMINISTRADOR'){
+            router.push({ path: '/personal' })
+          }
         }
       })
       .catch(error => {
