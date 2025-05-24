@@ -49,6 +49,10 @@
   import '../assets/ComponentStyles/LoginModal.css'
   import { ref } from 'vue'
   import router from '@/router'
+
+  import { useUsuarioStore } from '@/assets/stores/infoUserTemp'
+
+  import { enviarCorreo } from '@/server/correo'
   
   const emit = defineEmits(['close'])
   
@@ -112,13 +116,26 @@
         usuario: usuarioRegistro.value,
         contrasena: contrasena.value
       }
-      insertarUsuario(info)
-        .then(resultado => {
-          alert(resultado)
-        })
-        .catch(error => {
-          console.error('Error en el registro:', error)
-        })
+
+      useUsuarioStore().guardarInfo(info);
+
+      function generarToken() {
+        const fecha = Date.now().toString(36); // marca de tiempo en base 36
+        const aleatorio = Math.random().toString(36).substring(2, 8); // 6 caracteres aleatorios
+        return `${fecha}-${aleatorio}`;
+      }
+
+      const token = generarToken();
+      console.log("Token único generado:", token);
+
+      useUsuarioStore().guardarToken(token);
+      // console.log("L token: ",useUsuarioStore().cargarToken());
+
+      const baseUrl = window.location.href.split('#')[0];
+      const newURL = baseUrl + `#code=${token}`;
+
+      enviarCorreo(info.email, newURL);
+
     }
   
     // console.log('Datos de registro:')
