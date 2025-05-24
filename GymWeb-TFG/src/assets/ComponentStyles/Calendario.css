@@ -1,0 +1,117 @@
+.mostrado {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 60px auto;
+  background: #1f1f2b;
+  color: #f0f0f0;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Título */
+h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* Controles del calendario */
+.calendar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.calendar-controls button {
+  background-color: #2575fc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+.calendar-controls button:hover {
+  background-color: #1a4ec6;
+}
+
+.calendar-controls select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* Tabla del calendario */
+.calendar {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 4px;
+  table-layout: fixed;
+}
+
+.calendar th {
+  background-color: #292b38;
+  color: #fff;
+  font-weight: 600;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.calendar td {
+  background-color: #2e2f3a;
+  height: 50px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+/* Hora lateral */
+.calendar td:first-child {
+  background-color: #20222b;
+  font-weight: bold;
+  color: #ccc;
+}
+
+/* Celda ocupada */
+.ocupado {
+  background-color: #ff4d4f !important;
+  color: white;
+  font-weight: bold;
+}
+.calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.fecha-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #2a2a38;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+.fecha-actual {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #2a2a38;
+  padding: 8px 16px;
+  border-radius: 10px;
+}

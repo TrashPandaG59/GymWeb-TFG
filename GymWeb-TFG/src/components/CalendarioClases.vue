@@ -1,168 +1,123 @@
 <template>
-    <div :class="mostrar_calendario" class="mostrado">
-      <h2>Calendario</h2>
-      <div class="calendar-controls">
-        <button class="btn" @click="prevWeek">Semana Anterior</button>
-        <select v-model="year" @change="updateCalendar">
-          <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
-        </select>
-        <span>{{ monthNames[month - 1] }}</span>
-        <button class="btn" @click="nextWeek">Semana Siguiente</button>
-      </div>
-      <table class="calendar">
-        <thead>
-          <tr>
-            <th>Hora</th>
-            <th v-for="day in 7" :key="day">Día {{ startDay + day - 1 }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="hour in 24" :key="hour">
-            <td>{{ hour }}:00</td>
-            <td
-              v-for="day in 7"
-              :key="day"
-              :class="{ ocupado: isOcupado(startDay + day - 1, hour) }"
-            ></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue'
-//   import { getCitas } from '@/stores/api.js'
-//   import { usarTokenStore } from '@/stores/token.js'
-  
-  const mostrar_calendario = ref('citas-list-ver')
-  
-  const citas = ref([])
-  const year = ref(new Date().getFullYear())
-  const month = ref(new Date().getMonth() + 1)
-  const startDay = ref(1)
-  const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 5 + i)
-  const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
-  
-  const getTodasCitas = async () => {
-  // Datos ficticios para pruebas
-  const fetchedCitas = [
-    {
-      center: 'Centro Médico San José',
-      created_at: '11/05/2025 10:00:00',
-      date: '15/05/2025 09:00:00',
-      username: 'juanperez'
-    },
-    {
-      center: 'Clínica Norte',
-      created_at: '10/05/2025 14:30:00',
-      date: '16/05/2025 11:00:00',
-      username: 'mariagarcia'
-    },
-    {
-      center: 'Hospital Central',
-      created_at: '09/05/2025 08:15:00',
-      date: '17/05/2025 16:00:00',
-      username: 'carloslopez'
-    }
-  ];
+  <div :class="mostrar_calendario" class="mostrado">
+    <h2>Calendario</h2>
 
-  citas.value = fetchedCitas;
+    <div class="calendar-controls">
+      <button class="btn" @click="prevWeek" :disabled="!puedeRetrocederSemana()">← Semana Anterior</button>
+
+      <div class="fecha-info">
+        <span class="fecha-actual">{{ mesActual }} {{ anioActual }}</span>
+      </div>
+
+      <button class="btn btn-next" @click="nextWeek">Semana Siguiente →</button>
+    </div>
+
+    <table class="calendar">
+      <thead>
+        <tr>
+          <th>Hora</th>
+          <th v-for="i in 7" :key="i">
+            {{ formatDate(addDays(startDate, i - 1)) }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="hour in hours" :key="hour">
+          <td>{{ hour }}:00</td>
+          <td
+            v-for="i in 7"
+            :key="i"
+            :class="{ ocupado: isOcupado(addDays(startDate, i - 1), hour) }"
+          ></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+import '../assets/ComponentStyles/Calendario.css'
+
+const mostrar_calendario = ref('citas-list-ver')
+const citas = ref([])
+
+// Solo horas de 17 a 22
+const hours = [17, 18, 19, 20, 21, 22]
+
+// Día de hoy y cálculo del lunes actual
+const today = new Date()
+const startDate = ref(getStartOfWeek(today))
+
+const monthNames = [
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+]
+
+// Utilidades de fecha
+function getStartOfWeek(date) {
+  const d = new Date(date)
+  const day = d.getDay()
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1)
+  d.setDate(diff)
+  d.setHours(0, 0, 0, 0)
+  return d
 }
 
-  
-  const isOcupado = (day, hour) => {
-    return citas.value.some(cita => {
-      const [fecha, horaCompleta] = cita.date.split(' ')
-      const [diaCita, mesCita, anioCita] = fecha.split('/')
-      const [horaCita] = horaCompleta.split(':')
-  
-      const diaCitaNum = parseInt(diaCita, 10)
-      const mesCitaNum = parseInt(mesCita, 10)
-      const anioCitaNum = parseInt(anioCita, 10)
-      const horaCitaNum = parseInt(horaCita, 10)
-  
-      return (
-        diaCitaNum === day &&
-        mesCitaNum === month.value &&
-        anioCitaNum === year.value &&
-        horaCitaNum === hour
-      )
-    })
-  }
-  
-  const prevWeek = () => {
-    startDay.value -= 7
-    if (startDay.value < 1) {
-      month.value -= 1
-      if (month.value < 1) {
-        month.value = 12
-        year.value -= 1
-      }
-      const daysInPrevMonth = new Date(year.value, month.value, 0).getDate()
-      startDay.value = daysInPrevMonth + startDay.value
-    }
-  }
-  
-  const nextWeek = () => {
-    const daysInMonth = new Date(year.value, month.value, 0).getDate()
-    startDay.value += 7
-    if (startDay.value > daysInMonth) {
-      startDay.value -= daysInMonth
-      month.value += 1
-      if (month.value > 12) {
-        month.value = 1
-        year.value += 1
-      }
-    }
-  }
-  
-  const updateCalendar = () => {
-    // Puedes agregar lógica aquí si deseas actualizar más datos
-  }
-  
-  getTodasCitas()
-  </script>
-  
-  <style scoped>
-  .mostrado {
-    position: absolute;
-    width: 80%;
-    visibility: visible;
-    top: 30%;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 1;
-    pointer-events: auto;
-    background: #36393d;
-    color: #eaeaea;
-    padding: 12px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
-    border: 1px solid #23272a;
-  }
-  
-  .calendar-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  
-  .calendar {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .calendar th,
-  .calendar td {
-    border: 1px solid #ddd;
-    text-align: center;
-    padding: 4px;
-  }
-  
-  .ocupado {
-    background-color: red;
-  }
-  </style>
-  
+function addDays(date, days) {
+  const copy = new Date(date)
+  copy.setDate(copy.getDate() + days)
+  return copy
+}
+
+function formatDate(date) {
+  const texto = date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric' })
+  return texto.charAt(0).toUpperCase() + texto.slice(1)
+}
+
+
+// Ocupación
+function isOcupado(fechaDia, hora) {
+  return citas.value.some(cita => {
+    const [fecha, horaCompleta] = cita.date.split(' ')
+    const [dia, mes, anio] = fecha.split('/').map(Number)
+    const [horaCita] = horaCompleta.split(':').map(Number)
+
+    return (
+      dia === fechaDia.getDate() &&
+      mes === fechaDia.getMonth() + 1 &&
+      anio === fechaDia.getFullYear() &&
+      hora === horaCita
+    )
+  })
+}
+
+// Navegación semanas
+function puedeRetrocederSemana() {
+  const inicioSemanaActual = getStartOfWeek(new Date())
+  return startDate.value > inicioSemanaActual
+}
+
+function prevWeek() {
+  if (!puedeRetrocederSemana()) return
+  startDate.value = addDays(startDate.value, -7)
+}
+
+function nextWeek() {
+  startDate.value = addDays(startDate.value, 7)
+}
+
+// Mes y año dinámicos
+const mesActual = computed(() => monthNames[startDate.value.getMonth()])
+const anioActual = computed(() => startDate.value.getFullYear())
+
+// Mock citas
+const getTodasCitas = async () => {
+  citas.value = [
+    { center: 'Centro 1', date: '27/05/2025 17:00:00', username: 'ana' },
+    { center: 'Centro 2', date: '28/05/2025 18:00:00', username: 'luis' },
+  ]
+}
+
+getTodasCitas()
+</script>
