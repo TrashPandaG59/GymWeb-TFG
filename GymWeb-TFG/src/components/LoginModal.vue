@@ -45,7 +45,7 @@
   </template>
   
   <script setup>
-  import { buscarUser, insertarUsuario } from '@/server'
+  import { buscarUser } from '@/server'
   import '../assets/ComponentStyles/LoginModal.css'
   import { ref } from 'vue'
   import router from '@/router'

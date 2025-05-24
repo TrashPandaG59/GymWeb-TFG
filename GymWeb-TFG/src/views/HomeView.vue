@@ -93,6 +93,7 @@ import '../assets/ViewStyles/HomeView.css'
 import { gsap } from 'gsap' // Importar GSAP
 import { Draggable } from 'gsap/Draggable' // Importar Draggable
 import { useUsuarioStore } from '@/assets/stores/infoUserTemp'
+import { insertarUsuario } from '@/server'
 
 const modalBtn = ref(null)
 
@@ -108,13 +109,13 @@ onMounted(() => {
 
       useUsuarioStore().eliminarToken();
 
-      // insertarUsuario(info)
-      //   .then(resultado => {
-      //     alert(resultado)
-      //   })
-      //   .catch(error => {
-      //     console.error('Error en el registro:', error)
-      //   })
+      insertarUsuario(infoStore)
+        .then(resultado => {
+          alert(resultado)
+        })
+        .catch(error => {
+          console.error('Error en el registro:', error)
+        })
 
       modalBtn.value?.click()
     } 
