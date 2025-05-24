@@ -1,35 +1,74 @@
 # GymWeb-TFG
+Web para la administración de un gimnasio
 
-This template should help get you started developing with Vue 3 in Vite.
+GymWeb-TFG es una solución integral diseñada para gestionar el negocio de un gimnasio. El sistema permite monitorizar y gestionar eficientemente las operaciones de alta/baja de usuarios ya sean trabajadores o clientes, programar clases, gestionar inventario, 
+cuotas de gimnasio/membresias, salarios de trabajadores, entre otras.
 
-## Recommended IDE Setup
+## Características Principales
+- Gestión de usuarios - Altas/Bajas
+- Gestión de clases
+- Gestión de inventario
+- Gestión de clientes - Cuotas
+- Gestión de empleados - Salarios
+- Interfaz responsiva y moderna
+- Sistema de temas claro/oscuro
+- Compatibilidad multiplataforma - Web/Móvil
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Tecnologías Utilizadas
+- **Frontend**: Vue3 - Lenguaje: JavaScript
+- **Backend**: Node.js/Express - Lenguaje: JavaScript
+- **BBDD**: DBeaver y Supabase - Lenguaje: Postgre
+- **Framework UI**: Bootstrap 5, TailwindCSS, Gsap,
+  vConfetti, Cookies, Pinia, Router, Shepherd o driver.js
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+## Guía de Instalación
+### Dependencias Requeridas
+```bash
+npm install -D sass
+npm install bootstrap
 ```
 
-### Compile and Hot-Reload for Development
+### Configuración del Entorno
+1. Editor Recomendado: Visual Studio Code
+2. Extensiones Necesarias:
+   ```markdown
+   - Live Server
+   - Bootstrap IntelliSense
+   - SCSS IntelliSense
+   - Prettier
+   ```
 
-```sh
-npm run dev
-```
+### Comandos Útiles
+```markdown
+# Iniciar modo desarrollo
+npm start/ npm run dev
 
-### Compile and Minify for Production
-
-```sh
+# Construir versión de producción
 npm run build
+
+# Ejecutar pruebas
+npm test
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## Estructura del Proyecto
+```plaintext
 
-```sh
-npm run lint
 ```
+
+## Guía de Estilos
+El sistema implementa un diseño moderno y responsivo utilizando Bootstrap 5 como base, con las siguientes características:
+
+### Variables CSS Principales
+```scss
+
+```
+
+## Imágenes del Sistema
+| Imagen | Descripción |
+| --- | --- |
+
+
+## Consideraciones Técnicas
+- **Diseño Responsivo**: Totalmente adaptable a diferentes dispositivos y tamaños de pantalla
+- **Compatibilidad**: Probado en Google Chrome, Mozilla Firefox y Microsoft Edge
+- **Rendimiento**: Optimizado para carga rápida y respuesta fluida

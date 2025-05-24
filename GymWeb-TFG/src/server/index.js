@@ -25,31 +25,31 @@ const supabase = createClient(
 
 export const buscarUser = async (username, pass) => {
   const hashedPass = await hashear(pass);
-  console.log('Buscando usuario:', username, hashedPass); // Imprimir los parámetros de búsqueda
+  console.log('Buscando usuario:', username, hashedPass); 
   try {
     const { data, error } = await supabase
       .from('v_validar_usuario')
       .select('*')
       .eq('usuario', username)
       .eq('contrasena', hashedPass)
-      .maybeSingle(); // .single() para obtener solo un resultado
+      .maybeSingle(); 
 
     if (error) {
       console.error('Error al buscar usuario:', error.message);
-      return false; // Si hay error, devuelve false
+      return false; 
     } else if (data) {
       console.log('Usuario encontrado:', data.usuario);
       console.log('Usuario ROLL:', data.rol_nombre);
       console.log('DATA:', data);
 
-      return data; // Retorna el prompt si se encuentra
+      return data; 
     } else {
       console.log('Usuario no encontrado');
-      return false; // Si no se encuentra el usuario, devuelve false
+      return false; 
     }
   } catch (err) {
     console.error('Error:', err.message);
-    return false; // En caso de error en la ejecución, devuelve false
+    return false; 
   }
 };
 
@@ -57,7 +57,7 @@ export const insertarUsuario = async (info) => {
   try {
 
     info.contrasena = await hashear(info.contrasena);
-    console.log('Insertando usuario:', info); // Imprimir la información del usuario a insertar
+    console.log('Insertando usuario:', info); 
     const { data, error } = await supabase
     .rpc('p_alta_cliente', {
       c_apellidos: info.apellidos,
@@ -85,22 +85,22 @@ export const listarTodo = async (roll) => {
     const { data, error } = await supabase
       .from(roll)
       .select('*')
-      // .maybeSingle(); // .single() para obtener solo un resultado
+      // .maybeSingle(); 
 
     if (error) {
       console.error('Error al buscar usuario:', error.message);
-      return false; // Si hay error, devuelve false
+      return false; 
     } else if (data) {
-      console.log('Usuario encontrado:', data); // Imprimir el usuario encontrado
+      console.log('Usuario encontrado:', data); 
 
-      return data; // Retorna el prompt si se encuentra
+      return data; 
     } else {
       console.log('Usuario no encontrado');
-      return false; // Si no se encuentra el usuario, devuelve false
+      return false; 
     }
   } catch (err) {
     console.error('Error:', err.message);
-    return false; // En caso de error en la ejecución, devuelve false
+    return false; 
   }
 };
 
