@@ -53,19 +53,22 @@
     </section>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade custom-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-4 border-0">
+      <div class="modal-header bg-success text-white rounded-top-4">
+        <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          ¡Correo verificado!
+        </h1>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        ...
+      <div class="modal-body text-center py-4">
+        <p class="mb-2 fs-5">Tu correo ha sido verificado correctamente.</p>
+        <p class="mb-0 text-muted">Ahora puedes iniciar sesión y disfrutar de todos los servicios.</p>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+      <div class="modal-footer justify-content-center border-0 pb-4">
+        <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>
@@ -135,6 +138,18 @@ const mostrarModal = ref(false)
 #move {
   position: relative; /* Permite que GSAP manipule las coordenadas */
   cursor: grab; /* Cambia el cursor para indicar que es arrastrable */
+}
+
+.custom-modal .modal-content {
+  background: #f8f9fa;
+  border-radius: 1.5rem;
+}
+.custom-modal .modal-header {
+  border-bottom: none;
+  background: linear-gradient(90deg, #38b000 0%, #70e000 100%);
+}
+.custom-modal .modal-footer {
+  border-top: none;
 }
 </style>
 

@@ -135,7 +135,7 @@
       const newURL = baseUrl + `#code=${token}`;
 
       enviarCorreo(info.email, newURL);
-
+      alert("Enlace de verficación enviado a tu correo para completar el registro.");
     }
   
     // console.log('Datos de registro:')
