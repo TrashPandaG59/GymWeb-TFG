@@ -4,7 +4,7 @@ import ListaClases from '../components/ListaClases.vue'
 import CalendarioClases from '../components/CalendarioClases.vue'
 
 import { ref } from 'vue'
-
+import '../assets/ViewStyles/ClientesView.css'
 const endpoints = [
     { name: 'Fichar', component: Fichaje },
     { name: 'Clases', component: ListaClases },
