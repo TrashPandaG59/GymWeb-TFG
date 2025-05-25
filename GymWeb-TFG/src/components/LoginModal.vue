@@ -74,8 +74,11 @@
       .then(resultado => {
         console.log('ResultadoAAA:', resultado)
         console.log("resultado.rol_nombre: ",resultado.rol_nombre)
-        console.log(resultado.tipo_usuario)
-        if (resultado.tipo_usuario === 'CLIENTE') {
+        console.log("IDDDDD :",resultado.id)
+        console.log("tipo_usuario:::::::::::",resultado.tipo_usuario)
+        useUsuarioStore().guardarIdentidadUsuario(resultado.id, resultado.rol_nombre);
+
+        if (resultado.rol_nombre === 'CLIENTE') {
           router.push({ path: '/clientes' })
         } else {
           if(resultado.rol_nombre === 'ENTRENADOR'){

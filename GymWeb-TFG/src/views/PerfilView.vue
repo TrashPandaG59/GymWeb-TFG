@@ -23,6 +23,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import '../assets/ViewStyles/PerfilView.css'
 
 const usuario = ref({
   nombre: 'María',

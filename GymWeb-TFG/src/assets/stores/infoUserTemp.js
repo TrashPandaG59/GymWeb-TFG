@@ -32,10 +32,30 @@ export const useUsuarioStore = defineStore('usuario', () => {
     const data = localStorage.getItem('info');
     if (data) {
       info.value = JSON.parse(data);
-        console.log('Cargando info:', info.value);
-        const { token, ...usuarioSinToken } = info.value;
-        return usuarioSinToken;
+      console.log('Cargando info:', info.value);
+      const { token, ...usuarioSinToken } = info.value;
+      return usuarioSinToken;
     }
+  };
+
+  // NUEVAS FUNCIONES PARA id y roll
+  const guardarIdentidadUsuario = ( id, roll ) => {
+    const identidad = { id, roll };
+    console.log('Guardando identidad del usuario:', identidad);
+    localStorage.setItem('identidad_usuario', JSON.stringify(identidad));
+  };
+
+  const darIdentidadUsuario = () => {
+    const data = localStorage.getItem('identidad_usuario');
+    console.log('Datos de identidad del usuario:', data);
+    if (data) {
+      return JSON.parse(data);
+    }
+    return null;
+  };
+
+  const borrarIdentidadUsuario = () => {
+    localStorage.removeItem('identidad_usuario');
   };
 
   return {
@@ -43,7 +63,12 @@ export const useUsuarioStore = defineStore('usuario', () => {
     guardarToken,
     cargarToken,
     eliminarToken,
+
     guardarInfo,
-    cargarInfo
+    cargarInfo,
+    
+    guardarIdentidadUsuario,
+    darIdentidadUsuario,
+    borrarIdentidadUsuario
   };
 });
