@@ -4,6 +4,7 @@ import PersonalView from '../views/PersonalView.vue'
 import ClientesView from '../views/ClientesView.vue'
 import PerfilPersonalView from '../views/PerfilPersonalView.vue'
 import PerfilClientesView from '../views/PerfilClientesView.vue'
+import PerfilView from '../views/PerfilView.vue'
 
 const routes = [
   {
@@ -35,6 +36,11 @@ const routes = [
     path: '/clientes/:username',
     name: 'usuario_clientes',
     component: PerfilClientesView
+  },
+  {
+    path: '/perfil',
+    name: 'perfil',
+    component: PerfilView
   }
 ]
 
