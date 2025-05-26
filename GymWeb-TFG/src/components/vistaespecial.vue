@@ -17,7 +17,7 @@ export default {
       player.style.display = 'block';
       player.style.margin = 'auto';
       document.getElementById('flash-container').appendChild(player);
-      player.load('/games/demo.swf'); // asegúrate de tener este archivo en /public/games/
+      player.load('../src/games/demo.swf'); // asegúrate de tener este archivo en /public/games/
     };
     document.body.appendChild(script);
   }
