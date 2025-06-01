@@ -17,8 +17,29 @@
       </div>
 
       <button class="btn-editar">Editar perfil</button>
+      <button class="btn-editar" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Doble factor</button>
     </div>
   </div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="staticBackdropLabel">Doble factor de autenticación</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <Authenticator />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script setup>
@@ -26,16 +47,9 @@ import { ref, onMounted } from 'vue'
 import '../assets/ViewStyles/PerfilView.css'
 import { listarTodo } from '@/server'
 import { useUsuarioStore } from '@/assets/stores/infoUserTemp'
+import Authenticator from '@/components/Authenticator.vue'
 
-const usuario = ref({
-  nombre: 'María',
-  apellidos: 'Pérez López',
-  email: 'maria@example.com',
-  telefono: '+34 612 345 678',
-  fecha_nacimiento: '1990-06-15',
-  usuario: 'mariap',
-  // clases_por_semana: 3
-})
+const usuario = ref({})
 
 onMounted(async () => {
   try {
@@ -46,7 +60,10 @@ onMounted(async () => {
     
     let tipoUser;
     
-    if (roll.toLowerCase() === 'clientes') {
+    console.log('Cargando usuario con ID:', id_user);
+    console.log('Rol del usuario:', roll);
+
+    if (roll.toLowerCase() === 'cliente') {
       tipoUser = 'clientes';
     }else{
       tipoUser = 'empleados';
@@ -58,6 +75,7 @@ onMounted(async () => {
     if (response) {
       console.log('Filtrando datos...');
       const soloID2 = response.filter(persona => Number(persona.id) === id_user)[0];
+      console.log('Datos filtrados:', soloID2);
       usuario.value = {
         nombre: soloID2.nombre,
         apellidos: soloID2.apellidos,

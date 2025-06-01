@@ -57,6 +57,8 @@
               <strong>Capacidad:</strong> {{ infoCitaDia.capacidad_actual }} de {{ infoCitaDia.capacidad_maxima }} alumnos
             </li>
           </ul>
+          <button class="btn btn-primary mt-3" v-on:click="apuntarseClase()" v-if="useUsuarioStore().darIdentidadUsuario().roll !== 'ADMINISTRADOR' && useUsuarioStore().darIdentidadUsuario().roll !== 'ENTRENADOR' && infoCitaDia.capacidad_actual < infoCitaDia.capacidad_maxima">Apuntarse a Clase</button>
+          <p v-if="infoCitaDia.capacidad_actual >= infoCitaDia.capacidad_maxima" class="text-danger">Todas las plazas ocupadas</p>
         </div>
         <div v-else class="text-center fs-5 text-muted py-3">
           No hay nada en este día
@@ -75,7 +77,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import '../assets/ComponentStyles/Calendario.css'
-import { listarTodo } from '@/server'
+import { listarTodo, apuntarse_a_la_Clase } from '@/server'
+import { useUsuarioStore } from '@/assets/stores/infoUserTemp'
 
 const mostrar_calendario = ref('citas-list-ver')
 const citas = ref([])
@@ -160,8 +163,13 @@ const anioActual = computed(() => startDate.value.getFullYear())
 // getTodasCitas()
 
 const infoCitaDia = ref('No hay nada en este dia')
+const infoCitaDia_plus = ref()
 
 const llamarDIA = (fechaDia, hora) => {
+  console.log("Llamando a la cita del día:", fechaDia, hora);
+  infoCitaDia_plus.value = {dia: fechaDia, h: hora}; // Limpiar info previa
+  console.log("Llamando a la cita del día:", infoCitaDia_plus.value);
+
   const cita = citas.value.find(cita => {
     const [fecha, horaCompleta] = cita.date.split(' ')
     const [dia, mes, anio] = fecha.split('/').map(Number)
@@ -182,10 +190,19 @@ const llamarDIA = (fechaDia, hora) => {
     infoCitaDia.value = 'No hay nada en este dia';
     console.log("No hay cita en esa fecha y hora.")
   }
+  return infoCitaDia.value;
 }
 
+const apuntarseClase = async () => {
+  console.log("Apuntándose a la clase...", infoCitaDia_plus.value.dia, "  ", infoCitaDia_plus.value.h);
+  apuntarse_a_la_Clase(useUsuarioStore().darIdentidadUsuario().id, infoCitaDia.value.id_clase);
+  await actualizarCalendario();
+  llamarDIA(infoCitaDia_plus.value.dia, infoCitaDia_plus.value.h)
+}
 
-onMounted( async() => { 
+const actualizarCalendario = async () => {
+  citas.value = []; // Limpiar citas antes de actualizar
+  console.log("Actualizando calendario...");
   const clases = await listarTodo('v_profesor_clases');
   console.log("clases: ", clases);
 
@@ -196,6 +213,11 @@ onMounted( async() => {
   });
 
   console.log("citas: ", citas.value[0].todosLosDatos);
+}
+
+onMounted( async() => { 
+  
+  actualizarCalendario();
 
 })
 </script>

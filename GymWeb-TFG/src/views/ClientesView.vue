@@ -4,7 +4,6 @@ import ListaClases from '../components/ListaClases.vue'
 import CalendarioClases from '../components/CalendarioClases.vue'
 import Perfil from '../views/PerfilView.vue'
 import vistaespecial from '@/components/vistaespecial.vue'
-import Authenticator from '@/components/Authenticator.vue'
 
 import { ref } from 'vue'
 import '../assets/ViewStyles/ClientesView.css'
@@ -14,7 +13,6 @@ const endpoints = [
     { name: 'Clases', component: ListaClases },
     { name: 'Calendario', component: CalendarioClases },
     { name: 'Perfil', component: Perfil },
-    { name: 'Authenticator', component: Authenticator }
 ];
 
 const currentComponent = ref(Fichaje);

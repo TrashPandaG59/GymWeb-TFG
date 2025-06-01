@@ -1,0 +1,13 @@
+{
+    "id_clase": 1,
+    "clase": "Pilates",
+    "nombre_profesor": "María Teresa",
+    "apellidos_profesor": "López Martínez",
+    "hora_inicio": "18:00:00",
+    "hora_fin": "19:30:00",
+    "dia": "2025-06-02",
+    "capacidad_actual": 4,
+    "capacidad_maxima": 12
+}
+
+{"id":6,"roll":"CLIENTE"}

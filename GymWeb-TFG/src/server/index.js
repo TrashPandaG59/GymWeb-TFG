@@ -233,7 +233,76 @@ export const obtener_hora_entrada = async (id_usuario, roll) => {
   }
 };
 
+export const apuntarse_a_la_Clase = async (id_user, id_clase) => {
+  try {
 
+    console.log('Apuntando al usuario:', id_user, 'a la clase:', id_clase);
+    const { data, error } = await supabase
+      .rpc('p_clase_cliente', {
+        c_clase_id: id_clase,
+        c_cliente_id: id_user
+      });
+
+    if (error) {
+      console.error('Error al unirse a la clase:', error.message);
+    } else {
+      console.log('Usuario registrado en clase con éxito:', data);
+    }
+  } catch (err) {
+    console.error('Error:', err.message);
+  }
+};
+
+export const guardarDobleFactor = async (id_usuario, roll_usuario, code) => {
+  try {
+    let data, error;
+
+    if (roll_usuario.toLowerCase() === 'cliente') {
+      ({ data, error } = await supabase
+        .from('clientes')
+        .update({ cod_multifactor: code })
+        .eq('id', id_usuario));
+    } else {
+      ({ data, error } = await supabase
+        .from('empleados')
+        .update({ cod_multifactor: code })
+        .eq('id', id_usuario));
+    }
+
+    if (error) {
+      console.error('Error al fichar :', error.message);
+    } else {
+      console.log('Fichado con éxito:', data);
+    }
+  } catch (err) {
+    console.error('Error:', err.message);
+  }
+};
+
+export const buscarDobleFactor = async (username) => {
+  try {
+    const { data, error } = await supabase
+      .from('v_validar_usuario')
+      .select('*')
+      .eq('usuario', username)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error al buscar usuario:', error.message);
+      return false;
+    } else if (data) {
+      console.log('DATA:', data);
+
+      return data;
+    } else {
+      console.log('Usuario no encontrado');
+      return false;
+    }
+  } catch (err) {
+    console.error('Error:', err.message);
+    return false;
+  }
+};
 
 // console.log('prueba', await insertarUsuario(
 //   {
