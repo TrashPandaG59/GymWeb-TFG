@@ -18,7 +18,7 @@
             <li>Planes de entrenamiento personalizados</li>
           </ul>
         </div>
-        <img src="../assets/fitness-room.jpg" alt="Sala de fitness moderna" class="imagen-seccion" />
+        <img src="../assets/img/salafitness1.jpg" alt="Sala de fitness moderna" class="imagen-seccion" />
       </div>
     </section>
 
@@ -27,18 +27,7 @@
 </section>
 
     <section class="seccion clases">
-      <div class="contenido">
-        <div class="texto">
-          <h2>Clases Integrales</h2>
-          <p>Ofrecemos una amplia gama de clases diseñadas para todos los niveles y objetivos.</p>
-          <ul>
-            <li>Yoga, Pilates, HIIT, Spinning</li>
-            <li>Horarios flexibles</li>
-            <li>Ambiente motivador y de comunidad</li>
-          </ul>
-        </div>
-        <img src="../assets/classes.jpg" alt="Clase de yoga" class="imagen-seccion" />
-      </div>
+      <YogaCarrusel/>
     </section>
 
 <!-- Modal -->
@@ -84,7 +73,7 @@ import { Draggable } from 'gsap/Draggable' // Importar Draggable
 import { useUsuarioStore } from '@/assets/stores/infoUserTemp'
 import { insertarUsuario } from '@/server'
 import EntrenadoresCarrusel from '../components/EntrenadoresCarrusel.vue'
-
+import YogaCarrusel from '../components/YogaCarrusel.vue'
 const modalBtn = ref(null)
 
 onMounted(() => {
