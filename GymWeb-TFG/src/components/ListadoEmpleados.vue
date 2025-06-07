@@ -1,173 +1,281 @@
 <style scoped>
   .card {
-    width: 350px;
-    height: 350px;
-    background: #E8EAEA;
-    border-radius: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
+  background: #f4f7fb;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 800px;
+  margin: 40px auto;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
 
-  .title, .more {
-    padding: 10px 15px;
-  }
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #1f2a52;
+  text-align: center;
+}
 
-  .user {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 15px;
-  }
+.user__container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
-  .user__content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-grow: 1;
-  }
+.user {
+  background: white;
+  border-radius: 12px;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
 
-  .user__container {
-    display: flex;
-    flex-direction: column;
-  }
+.user:hover {
+  background: #eef2f8;
+}
 
-  .title {
-    font-weight: 900;
-    font-size: 1.3em;
-  }
+.name {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
 
-  .name {
-    font-weight: 800;
-  }
+.username {
+  font-size: 0.95rem;
+  color: #777;
+}
 
-  .username {
-    font-size: .9em;
-    color: #64696e;
-  }
+.follow {
+  background-color: #2575fc;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
 
-  .image {
-    width: 60px;
-    height: 60px;
-    background: rgb(22,19,70);
-    background: linear-gradient(295deg, rgba(22,19,70,1) 41%, rgba(89,177,237,1) 100%);
-    border-radius: 50%;
-    margin-right: 15px;
-  }
+.follow:hover {
+  background-color: #1a57c5;
+}
 
-  .follow {
-    border: none;
-    border-radius: 25px;
-    background-color: #0f1113;
-    color: white;
-    padding: 8px 15px;
-    font-weight: 700;
-  }
-
-  .more {
-    display: block;
-    text-decoration: none;
-    color: rgb(29, 155, 240);
-    font-weight: 800;
-  }
-
-  .user:hover {
-    background-color: #b3b6b6;
-  }
-
-  .more:hover {
-    background-color: #b3b6b6;
-    border-radius: 0px 0px 15px 15px;
-  }
-
-  .follow:hover {
-    background-color: #2c3136;
-  }
 </style>
-
 <template>
   <div class="card">
-    <p class="title">Listado Clientes</p>
+    <p class="title">Listado Empleados</p>
+    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#nuevoEmpleadoModal">
+  ➕ Añadir empleado
+</button>
+
     <div class="user__container">
-    <div 
-      class="user" 
-      v-for="cliente in clientes" 
-      :key="cliente.id">
-      <div class="image"></div>
-      <div class="user__content">
-        <div class="text">
-        <span class="name">{{ cliente.nombre }}</span>
-        <p class="username">@{{ cliente.usuario }}</p>
-        <!-- .toLowerCase().replace(/\s+/g, '') -->
+      <div class="user" v-for="e in empleados" :key="e.id">
+        <div class="user__content">
+          <div class="text">
+            <span class="name">{{ e.nombre }} {{ e.apellidos }}</span>
+            <p class="username">@{{ e.usuario }}</p>
+          </div>
+          <button
+            @click="infoEmpleado(e)"
+            type="button"
+            class="follow btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#empleadoModal"
+          >
+            Ver
+          </button>
         </div>
-        <button v-on:click="infouser(cliente)"
-         type="button" class="follow btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-        >Ver</button>
       </div>
     </div>
 
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="empleadoModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5">Ficha de Empleado</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              @click="cancelarEdicion"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div v-if="!editando">
+              <h5><strong>Nombre:</strong> {{ empleado.nombre }} {{ empleado.apellidos }}</h5>
+              <h5><strong>Usuario:</strong> {{ empleado.usuario }}</h5>
+              <h5><strong>Email:</strong> {{ empleado.email }}</h5>
+              <h5><strong>Teléfono:</strong> {{ empleado.telefono }}</h5>
+              <h5><strong>Fecha Nacimiento:</strong> {{ empleado.fecha_nacimiento }}</h5>
+              <h5><strong>Fecha Registro:</strong> {{ empleado.fecha_registro }}</h5>
+              <h5><strong>ID:</strong> {{ empleado.id }}</h5>
+            </div>
+
+            <div v-else>
+              <label>Nombre:
+                <input v-model="empleadoEditado.nombre" class="form-control mb-2" />
+              </label>
+              <label>Apellidos:
+                <input v-model="empleadoEditado.apellidos" class="form-control mb-2" />
+              </label>
+              <label>Usuario:
+                <input v-model="empleadoEditado.usuario" class="form-control mb-2" />
+              </label>
+              <label>Email:
+                <input v-model="empleadoEditado.email" class="form-control mb-2" />
+              </label>
+              <label>Teléfono:
+                <input v-model="empleadoEditado.telefono" class="form-control mb-2" />
+              </label>
+              <label>Fecha Nacimiento:
+                <input type="date" v-model="empleadoEditado.fecha_nacimiento" class="form-control mb-2" />
+              </label>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <template v-if="!editando">
+              <button class="btn btn-warning" @click="editarEmpleado">Editar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </template>
+            <template v-else>
+              <button class="btn btn-success" @click="guardarCambios">Guardar</button>
+              <button class="btn btn-outline-secondary" @click="cancelarEdicion">Cancelar</button>
+            </template>
+          </div>
+        </div>
+      </div>
     </div>
-    <a class="more" href="#">See more</a>
-    <!-- Button trigger modal -->
-
-
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
+    <!-- Modal para añadir nuevo empleado -->
+<div
+  class="modal fade"
+  id="nuevoEmpleadoModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h1 class="modal-title fs-5">Nuevo empleado</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" @click="resetNuevoEmpleado"></button>
       </div>
       <div class="modal-body">
-        <h2>nombre: {{cliente.nombre}} {{ cliente.apellidos }}</h2>
-        <h2>email: {{cliente.email}}</h2>
+        <label>Nombre:
+          <input v-model="nuevoEmpleado.nombre" class="form-control mb-2" required />
+        </label>
+        <label>Apellidos:
+          <input v-model="nuevoEmpleado.apellidos" class="form-control mb-2" required />
+        </label>
+        <label>Usuario:
+          <input v-model="nuevoEmpleado.usuario" class="form-control mb-2" required />
+        </label>
+        <label>Email:
+          <input v-model="nuevoEmpleado.email" class="form-control mb-2" type="email" required />
+        </label>
+        <label>Teléfono:
+          <input v-model="nuevoEmpleado.telefono" class="form-control mb-2" />
+        </label>
+        <label>Fecha de nacimiento:
+          <input v-model="nuevoEmpleado.fecha_nacimiento" class="form-control mb-2" type="date" />
+        </label>
       </div>
-      <h2>telefono: {{cliente.telefono}}</h2>
-      <h2>fecha_nacimiento: {{cliente.fecha_nacimiento}}</h2>
-      <h2>fecha_registro: {{cliente.fecha_registro}}</h2>
-      <h2>id: {{cliente.id}}</h2>
-      <h2>usuario: {{cliente.usuario}}</h2>
-<!-- apellidos
-contrasena
-email
-fecha_nacimiento
-fecha_registro
-id
-nombre
-telefono
-usuario -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" @click="guardarNuevoEmpleado">Guardar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="resetNuevoEmpleado">Cancelar</button>
       </div>
     </div>
   </div>
 </div>
+
   </div>
-
-
-  
 </template>
 
 <script setup>
-import { listarTodo } from '@/server';
-import { onMounted } from 'vue';
-import { ref } from 'vue';
+import { listarTodo } from '@/server'
+import { ref, onMounted } from 'vue'
 
-const clientes = ref([]);
+const empleados = ref([])
+const empleado = ref({})
+const empleadoEditado = ref({})
+const editando = ref(false)
 
-const cliente = ref([]);
-
-const infouser = (info) => {
-    cliente.value = info;
-    console.log(info);
+const infoEmpleado = (e) => {
+  empleado.value = e
+  editando.value = false
 }
 
-onMounted( async () => {
-    clientes.value = await listarTodo("empleados");
-    console.log(clientes.value[0].nombre);
-});
+const editarEmpleado = () => {
+  empleadoEditado.value = { ...empleado.value }
+  editando.value = true
+}
 
+const cancelarEdicion = () => {
+  editando.value = false
+}
+
+const guardarCambios = () => {
+  empleado.value = { ...empleadoEditado.value }
+  editando.value = false
+  alert('Cambios guardados con éxito')
+}
+
+onMounted(async () => {
+  empleados.value = await listarTodo('empleados')
+})
+
+const nuevoEmpleado = ref({
+  nombre: '',
+  apellidos: '',
+  usuario: '',
+  email: '',
+  telefono: '',
+  fecha_nacimiento: ''
+})
+
+const resetNuevoEmpleado = () => {
+  nuevoEmpleado.value = {
+    nombre: '',
+    apellidos: '',
+    usuario: '',
+    email: '',
+    telefono: '',
+    fecha_nacimiento: ''
+  }
+}
+
+const guardarNuevoEmpleado = () => {
+  if (
+    !nuevoEmpleado.value.nombre ||
+    !nuevoEmpleado.value.apellidos ||
+    !nuevoEmpleado.value.usuario ||
+    !nuevoEmpleado.value.email
+  ) {
+    alert('Por favor, completa todos los campos obligatorios.')
+    return
+  }
+
+  const nuevo = {
+    ...nuevoEmpleado.value,
+    id: Date.now().toString(),
+    fecha_registro: new Date().toISOString().split('T')[0]
+  }
+
+  empleados.value.push(nuevo)
+  alert('Empleado añadido con éxito')
+  resetNuevoEmpleado()
+  document.getElementById('nuevoEmpleadoModal').click() // Cierra el modal
+}
 
 </script>
