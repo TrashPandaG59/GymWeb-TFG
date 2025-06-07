@@ -22,20 +22,9 @@
       </div>
     </section>
 
-    <section class="seccion entrenadores">
-      <div class="contenido">
-        <div class="texto">
-          <h2>Entrenadores Profesionales</h2>
-          <p>Nuestro equipo está formado por expertos certificados listos para ayudarte a alcanzar tus metas.</p>
-          <ul>
-            <li>Certificaciones internacionales</li>
-            <li>Atención personalizada</li>
-            <li>Experiencia en diversas disciplinas</li>
-          </ul>
-        </div>
-        <img src="../assets/trainers.jpg" alt="Entrenadores del gimnasio" class="imagen-seccion" />
-      </div>
-    </section>
+<section class="entrenadores">
+  <EntrenadoresCarrusel />
+</section>
 
     <section class="seccion clases">
       <div class="contenido">
@@ -94,6 +83,7 @@ import { gsap } from 'gsap' // Importar GSAP
 import { Draggable } from 'gsap/Draggable' // Importar Draggable
 import { useUsuarioStore } from '@/assets/stores/infoUserTemp'
 import { insertarUsuario } from '@/server'
+import EntrenadoresCarrusel from '../components/EntrenadoresCarrusel.vue'
 
 const modalBtn = ref(null)
 
@@ -118,7 +108,7 @@ onMounted(() => {
         })
 
       modalBtn.value?.click()
-    } 
+    }
   }
 
   // Animación de entrada
