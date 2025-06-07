@@ -61,16 +61,21 @@
   background-color: #1a57c5;
 }
 
-</style>
-<template>
+</style><template>
   <div class="card">
     <p class="title">Listado Empleados</p>
     <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#nuevoEmpleadoModal">
-  ➕ Añadir empleado
-</button>
+      ➕ Añadir empleado
+    </button>
+    <button
+      class="btn btn-outline-primary mb-3"
+      @click="mostrarDesactivados = !mostrarDesactivados"
+    >
+      {{ mostrarDesactivados ? '← Ver activos' : 'Ver empleados desactivados' }}
+    </button>
 
     <div class="user__container">
-      <div class="user" v-for="e in empleados" :key="e.id">
+      <div class="user" v-for="e in mostrarDesactivados ? empleadosInactivos : empleadosActivos" :key="e.id">
         <div class="user__content">
           <div class="text">
             <span class="name">{{ e.nombre }} {{ e.apellidos }}</span>
@@ -84,6 +89,13 @@
             data-bs-target="#empleadoModal"
           >
             Ver
+          </button>
+          <button
+            v-if="mostrarDesactivados"
+            class="btn btn-success ms-2"
+            @click="reactivarEmpleado(e)"
+          >
+            Reactivar
           </button>
         </div>
       </div>
@@ -146,6 +158,7 @@
           <div class="modal-footer">
             <template v-if="!editando">
               <button class="btn btn-warning" @click="editarEmpleado">Editar</button>
+              <button v-if="empleado.activo" class="btn btn-danger" @click="desactivarEmpleado">Desactivar empleado</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </template>
             <template v-else>
@@ -156,60 +169,57 @@
         </div>
       </div>
     </div>
+
     <!-- Modal para añadir nuevo empleado -->
-<div
-  class="modal fade"
-  id="nuevoEmpleadoModal"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
-  tabindex="-1"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5">Nuevo empleado</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" @click="resetNuevoEmpleado"></button>
-      </div>
-      <div class="modal-body">
-        <label>Nombre:
-          <input v-model="nuevoEmpleado.nombre" class="form-control mb-2" required />
-        </label>
-        <label>Apellidos:
-          <input v-model="nuevoEmpleado.apellidos" class="form-control mb-2" required />
-        </label>
-        <label>Usuario:
-          <input v-model="nuevoEmpleado.usuario" class="form-control mb-2" required />
-        </label>
-        <label>Email:
-          <input v-model="nuevoEmpleado.email" class="form-control mb-2" type="email" required />
-        </label>
-        <label>Teléfono:
-          <input v-model="nuevoEmpleado.telefono" class="form-control mb-2" />
-        </label>
-        <label>Fecha de nacimiento:
-          <input v-model="nuevoEmpleado.fecha_nacimiento" class="form-control mb-2" type="date" />
-        </label>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" @click="guardarNuevoEmpleado">Guardar</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="resetNuevoEmpleado">Cancelar</button>
+    <div class="modal fade" id="nuevoEmpleadoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5">Nuevo empleado</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" @click="resetNuevoEmpleado"></button>
+          </div>
+          <div class="modal-body">
+            <label>Nombre:
+              <input v-model="nuevoEmpleado.nombre" class="form-control mb-2" required />
+            </label>
+            <label>Apellidos:
+              <input v-model="nuevoEmpleado.apellidos" class="form-control mb-2" required />
+            </label>
+            <label>Usuario:
+              <input v-model="nuevoEmpleado.usuario" class="form-control mb-2" required />
+            </label>
+            <label>Email:
+              <input v-model="nuevoEmpleado.email" class="form-control mb-2" type="email" required />
+            </label>
+            <label>Teléfono:
+              <input v-model="nuevoEmpleado.telefono" class="form-control mb-2" />
+            </label>
+            <label>Fecha de nacimiento:
+              <input v-model="nuevoEmpleado.fecha_nacimiento" class="form-control mb-2" type="date" />
+            </label>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" @click="guardarNuevoEmpleado">Guardar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="resetNuevoEmpleado">Cancelar</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
   </div>
 </template>
 
 <script setup>
 import { listarTodo } from '@/server'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 const empleados = ref([])
 const empleado = ref({})
 const empleadoEditado = ref({})
 const editando = ref(false)
+const mostrarDesactivados = ref(false)
+
+const empleadosActivos = computed(() => empleados.value.filter(e => e.activo))
+const empleadosInactivos = computed(() => empleados.value.filter(e => !e.activo))
 
 const infoEmpleado = (e) => {
   empleado.value = e
@@ -231,8 +241,20 @@ const guardarCambios = () => {
   alert('Cambios guardados con éxito')
 }
 
+const desactivarEmpleado = () => {
+  empleado.value.activo = false
+  editando.value = false
+  alert('Empleado desactivado')
+}
+
+const reactivarEmpleado = (emp) => {
+  emp.activo = true
+  alert('Empleado reactivado')
+}
+
 onMounted(async () => {
-  empleados.value = await listarTodo('empleados')
+  const resultado = await listarTodo('empleados')
+  empleados.value = resultado.map(e => ({ ...e, activo: e.activo !== false }))
 })
 
 const nuevoEmpleado = ref({
@@ -269,13 +291,13 @@ const guardarNuevoEmpleado = () => {
   const nuevo = {
     ...nuevoEmpleado.value,
     id: Date.now().toString(),
-    fecha_registro: new Date().toISOString().split('T')[0]
+    fecha_registro: new Date().toISOString().split('T')[0],
+    activo: true
   }
 
   empleados.value.push(nuevo)
   alert('Empleado añadido con éxito')
   resetNuevoEmpleado()
-  document.getElementById('nuevoEmpleadoModal').click() // Cierra el modal
+  document.getElementById('nuevoEmpleadoModal').click()
 }
-
 </script>
