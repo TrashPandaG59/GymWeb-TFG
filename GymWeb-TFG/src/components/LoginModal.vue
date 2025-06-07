@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-overlay" @click.self="cerrar">
+  <div class="modal-overlay">
     <div class="form-box">
       <!-- LOGIN -->
       <form class="form" @submit.prevent="loginF" v-if="vista === 'login'">
@@ -8,14 +8,24 @@
 
         <div class="form-container">
           <input class="input" type="text" placeholder="Usuario" v-model="usuario" required />
-          <input class="input" type="password" placeholder="Contraseña o Codigo doble factor" v-model="password" required />
+          <input class="input" type="password" placeholder="Contraseña o Código doble factor" v-model="password" required />
         </div>
 
         <button type="submit">Entrar</button>
 
+        <!-- Mensaje de error -->
+        <p v-if="errorLogin" class="login-error-msg">
+          Usuario o contraseña incorrectos. Inténtalo de nuevo.
+        </p>
+
         <div class="form-section">
-          ¿No tienes cuenta? <a href="#" @click.prevent="vista = 'registro'">Regístrate</a>
+          ¿No tienes cuenta?
+          <a href="#" @click.prevent="vista = 'registro'; errorLogin = false">Regístrate</a>
         </div>
+        <div class="form-section">
+  <button type="button" @click="cerrar" class="btn-cerrar-mini">Cancelar</button>
+</div>
+
       </form>
 
       <!-- REGISTRO -->
@@ -31,14 +41,19 @@
           <input class="input" type="date" placeholder="Fecha de nacimiento" v-model="fecha_nacimiento" />
           <input class="input" type="text" placeholder="Usuario" v-model="usuarioRegistro" required />
           <input class="input" type="password" placeholder="Contraseña" v-model="contrasena" required />
-          <input class="input" type="password" placeholder="Confirmar contraseña" v-model="confirmarContrasena"
-            required />
+          <input class="input" type="password" placeholder="Confirmar contraseña" v-model="confirmarContrasena" required />
         </div>
 
         <button type="submit">Registrarse</button>
 
         <div class="form-section">
-          ¿Ya tienes cuenta? <a href="#" @click.prevent="vista = 'login'">Iniciar sesión</a>
+          ¿Ya tienes cuenta?
+          <a href="#" @click.prevent="vista = 'login'">Iniciar sesión</a>
+        </div>
+
+        <!-- Botón de cerrar solo visible en modo registro -->
+        <div class="form-section">
+          <button type="button" @click="cerrar" class="btn-cerrar-mini">Cancelar</button>
         </div>
       </form>
     </div>
@@ -46,20 +61,19 @@
 </template>
 
 <script setup>
-import { buscarUser } from '@/server'
-import '../assets/ComponentStyles/LoginModal.css'
 import { ref } from 'vue'
 import router from '@/router'
+import { buscarUser } from '@/server'
 import { validarDobleFactor } from '@/server/validarDobleFactor'
 import { buscarDobleFactor } from '@/server'
-
-import { useUsuarioStore } from '@/assets/stores/infoUserTemp'
-
 import { enviarCorreo } from '@/server/correo'
+import { useUsuarioStore } from '@/assets/stores/infoUserTemp'
+import '../assets/ComponentStyles/LoginModal.css'
 
 const emit = defineEmits(['close'])
 
 const vista = ref('login')
+const errorLogin = ref(false)
 
 // --- LOGIN ---
 const usuario = ref('')
@@ -70,63 +84,46 @@ function cerrar() {
 }
 
 async function loginF() {
-  console.log('Usuario:', usuario.value)
-  console.log('Password:', password.value)
+  errorLogin.value = false
 
-  const haytoken = ref(true)
+  try {
+    // Verificamos doble factor
+    const token = await buscarDobleFactor(usuario.value)
+    const multifactorCorrecto = token.cod_multifactor
+      ? validarDobleFactor(token.cod_multifactor, password.value)
+      : true
 
-  const token = await buscarDobleFactor(usuario.value)
-  console.log("Token de doble factor:", token.cod_multifactor)
-  if (token.cod_multifactor != null) {
-    haytoken.value = validarDobleFactor(token.cod_multifactor, password.value);
-  }
+    if (!multifactorCorrecto) {
+      throw new Error('Código de doble factor incorrecto')
+    }
 
+    // Verificamos login
+    const resultado = await buscarUser(usuario.value, password.value)
 
-  if (!haytoken.value) {
-    buscarUser(usuario.value, password.value)
-      .then(resultado => {
-        console.log('ResultadoAAA:', resultado)
-        console.log("resultado.rol_nombre: ", resultado.rol_nombre)
-        console.log("IDDDDD :", resultado.id)
-        console.log("tipo_usuario:::::::::::", resultado.tipo_usuario)
-        useUsuarioStore().guardarIdentidadUsuario(resultado.id, resultado.rol_nombre);
+    if (!resultado || !resultado.rol_nombre) {
+      throw new Error('Usuario o contraseña incorrectos')
+    }
 
-        if (resultado.rol_nombre === 'CLIENTE') {
-          router.push({ path: '/clientes' })
-        } else {
-          if (resultado.rol_nombre === 'ENTRENADOR') {
-            router.push({ path: '/personal_limitado' })
-          } else if (resultado.rol_nombre === 'ADMINISTRADOR') {
-            router.push({ path: '/personal' })
-          }
-        }
-      })
-      .catch(error => {
-        console.error('Error en el login:', error)
-      })
-  } else {
-    const resultado = token;
-    console.log('Doble factor verificado, resultado:', resultado)
-    console.log('ResultadoAAA:', resultado)
-    console.log("resultado.rol_nombre: ", resultado.rol_nombre)
-    console.log("IDDDDD :", resultado.id)
-    console.log("tipo_usuario:::::::::::", resultado.tipo_usuario)
-    useUsuarioStore().guardarIdentidadUsuario(resultado.id, resultado.rol_nombre);
+    // Guardamos usuario y redirigimos
+    useUsuarioStore().guardarIdentidadUsuario(resultado.id, resultado.rol_nombre)
 
     if (resultado.rol_nombre === 'CLIENTE') {
       router.push({ path: '/clientes' })
-    } else {
-      if (resultado.rol_nombre === 'ENTRENADOR') {
-        router.push({ path: '/personal_limitado' })
-      } else if (resultado.rol_nombre === 'ADMINISTRADOR') {
-        router.push({ path: '/personal' })
-      }
+    } else if (resultado.rol_nombre === 'ENTRENADOR') {
+      router.push({ path: '/personal_limitado' })
+    } else if (resultado.rol_nombre === 'ADMINISTRADOR') {
+      router.push({ path: '/personal' })
     }
+
+    cerrar() // SOLO si todo fue bien
+
+  } catch (error) {
+    console.error('Login fallido:', error.message)
+    errorLogin.value = true
   }
-
-
-  cerrar()
 }
+
+
 
 // --- REGISTRO ---
 const nombre = ref('')
@@ -142,53 +139,28 @@ function registrarF() {
   if (contrasena.value !== confirmarContrasena.value) {
     alert('Las contraseñas no coinciden. Por favor, revísalas.')
     return
-  } else {
-    const info = {
-      nombre: nombre.value,
-      apellidos: apellidos.value,
-      email: email.value,
-      telefono: telefono.value,
-      fecha_nacimiento: fecha_nacimiento.value,
-      usuario: usuarioRegistro.value,
-      contrasena: contrasena.value
-    }
-
-    useUsuarioStore().guardarInfo(info);
-
-    function generarToken() {
-      const fecha = Date.now().toString(36); // marca de tiempo en base 36
-      const aleatorio = Math.random().toString(36).substring(2, 8); // 6 caracteres aleatorios
-      return `${fecha}-${aleatorio}`;
-    }
-
-    const token = generarToken();
-    console.log("Token único generado:", token);
-
-    useUsuarioStore().guardarToken(token);
-    // console.log("L token: ",useUsuarioStore().cargarToken());
-
-    const baseUrl = window.location.href.split('#')[0];
-    const newURL = baseUrl + `#code=${token}`;
-
-    enviarCorreo(info.email, newURL);
-    alert("Enlace de verficación enviado a tu correo para completar el registro.");
   }
 
-  // console.log('Datos de registro:')
-  // console.log({
-  //   nombre: nombre.value,
-  //   apellidos: apellidos.value,
-  //   email: email.value,
-  //   telefono: telefono.value,
-  //   fecha_nacimiento: fecha_nacimiento.value,
-  //   usuario: usuarioRegistro.value,
-  //   contrasena: contrasena.value
-  // })
+  const info = {
+    nombre: nombre.value,
+    apellidos: apellidos.value,
+    email: email.value,
+    telefono: telefono.value,
+    fecha_nacimiento: fecha_nacimiento.value,
+    usuario: usuarioRegistro.value,
+    contrasena: contrasena.value
+  }
 
-  // alert('Te has registrado correctamente (demo)')
+  useUsuarioStore().guardarInfo(info)
+
+  const token = `${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 8)}`
+  useUsuarioStore().guardarToken(token)
+
+  const baseUrl = window.location.href.split('#')[0]
+  const newURL = `${baseUrl}#code=${token}`
+
+  enviarCorreo(info.email, newURL)
+  alert("Enlace de verificación enviado a tu correo para completar el registro.")
   cerrar()
-
-
-
 }
 </script>
