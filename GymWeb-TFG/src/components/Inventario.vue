@@ -169,9 +169,9 @@
               <h2>Código: {{ productoSeleccionado.codigo_producto }}</h2>
               <h2>Cantidad Actual: {{ productoSeleccionado.cantidad_actual }}</h2>
               <h2>Cantidad Mínima: {{ productoSeleccionado.cantidad_minima }}</h2>
-              <h2>Precio Unitario: {{ productoSeleccionado.precio_unitario }}</h2>
+              <h2>Precio Unitario: {{ productoSeleccionado.precio_unitario }} €</h2>
               <h2>Fecha Último Ingreso: {{ productoSeleccionado.fecha_ultimo_ingreso }}</h2>
-              <h2>Responsable ID: {{ productoSeleccionado.responsable_id }}</h2>
+              <!-- <h2>Responsable ID: {{ productoSeleccionado.responsable_id }}</h2> -->
             </div>
 
             <div v-else>
@@ -187,15 +187,16 @@
               <label>Cantidad Mínima:
                 <input type="number" v-model="productoEditado.cantidad_minima" class="form-control mb-2" />
               </label>
-              <label>Precio Unitario:
+              <label>Precio Unitario (€):
                 <input type="number" step="0.01" v-model="productoEditado.precio_unitario" class="form-control mb-2" />
               </label>
               <label>Fecha Último Ingreso:
-                <input type="date" v-model="productoEditado.fecha_ultimo_ingreso" class="form-control mb-2" />
+                <!-- <input type="date" v-model="productoEditado.fecha_ultimo_ingreso" class="form-control mb-2" /> -->
+                 <p class="form-control mb-2">{{productoEditado.fecha_ultimo_ingreso}}</p>
               </label>
-              <label>Responsable ID:
+              <!-- <label>Responsable ID:
                 <input type="text" v-model="productoEditado.responsable_id" class="form-control mb-2" />
-              </label>
+              </label> -->
             </div>
           </div>
 
@@ -217,7 +218,7 @@
 </template>
 
 <script setup>
-import { listarTodo } from '@/server'
+import { listarTodo, modificarProducto } from '@/server'
 import { onMounted, ref } from 'vue'
 
 const productos = ref([])
@@ -232,6 +233,20 @@ const infoProducto = (producto) => {
 
 const editarProducto = () => {
   productoEditado.value = { ...productoSeleccionado.value }
+
+  // Asigna la fecha actual en formato "YYYY-MM-DDTHH:mm:ss.SSSSS"
+  const now = new Date()
+  const pad = (n, z = 2) => ('00' + n).slice(-z)
+  const ms = ('00000' + now.getMilliseconds()).slice(-5)
+  productoEditado.value.fecha_ultimo_ingreso =
+    now.getFullYear() + '-' +
+    pad(now.getMonth() + 1) + '-' +
+    pad(now.getDate()) + 'T' +
+    pad(now.getHours()) + ':' +
+    pad(now.getMinutes()) + ':' +
+    pad(now.getSeconds()) + '.' +
+    ms
+
   editando.value = true
 }
 
@@ -239,9 +254,10 @@ const cancelarEdicion = () => {
   editando.value = false
 }
 
-const guardarCambios = () => {
+const guardarCambios = async () => {
   productoSeleccionado.value = { ...productoEditado.value }
   editando.value = false
+  await modificarProducto("inventario", productoSeleccionado.value)
   alert('Cambios guardados con éxito')
 }
 

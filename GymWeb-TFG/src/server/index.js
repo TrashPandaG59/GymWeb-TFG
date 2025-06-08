@@ -104,6 +104,140 @@ export const listarTodo = async (roll) => {
   }
 };
 
+export const crearUser = async (roll, info) => {
+  console.log('Modificando usuario:', info);
+  console.log('Rol del usuario:', roll);
+  try {
+    // Si se proporciona una nueva contraseña, hashearla antes de enviar
+    let contrasenaHasheada = info.contrasena;
+    if (contrasenaHasheada) {
+      contrasenaHasheada = await hashear(info.contrasena);
+    }
+
+    const { data, error } = await supabase
+      .rpc(roll, {
+        e_nombre: info.nombre,
+        e_apellidos: info.apellidos,
+        e_email: info.email,
+        e_telefono: info.telefono,
+        e_fecha_nacimiento: info.fecha_nacimiento,
+        e_cargo: info.cargo,
+        e_usuario: info.usuario,
+        e_contrasena: contrasenaHasheada,
+        e_fecha_inicio: info.fecha_inicio,
+        e_salario_base: info.salario_base,
+        e_activo: info.activo,
+        n_fecha_pago: info.fecha_pago,
+        n_total_devengado: info.total_devengado,
+        n_total_deducciones: info.total_deducciones,
+        // n_neto_pagable: info.neto_pagable,
+        n_estado: info.estado,
+        e_tipo_contrato: info.tipo_contrato,
+        r_nombre: info.rol
+      });
+    // .maybeSingle(); 
+
+    if (error) {
+      console.error('Error al buscar usuario:', error.message);
+      return false;
+    } else if (data) {
+      console.log('Usuario encontrado:', data);
+
+      return data;
+    } else {
+      console.log('Usuario no encontrado');
+      return false;
+    }
+  } catch (err) {
+    console.error('Error:', err.message);
+    return false;
+  }
+};
+
+export const modificarUser = async (roll, info) => {
+  console.log('Modificando usuario:', info);
+  console.log('Rol del usuario:', roll);
+  try {
+    // Si se proporciona una nueva contraseña, hashearla antes de enviar
+    let contrasenaHasheada = info.contrasena;
+    if (contrasenaHasheada) {
+      contrasenaHasheada = await hashear(info.contrasena);
+    }
+
+    const { data, error } = await supabase
+      .rpc(roll, {
+        e_id: info.id,
+        e_nombre: info.nombre,
+        e_apellidos: info.apellidos,
+        e_email: info.email,
+        e_telefono: info.telefono,
+        e_fecha_nacimiento: info.fecha_nacimiento,
+        e_cargo: info.cargo,
+        e_usuario: info.usuario,
+        e_contrasena: contrasenaHasheada,
+        e_fecha_inicio: info.fecha_inicio,
+        e_salario_base: info.salario_base,
+        e_activo: info.activo,
+        n_fecha_pago: info.fecha_pago,
+        n_total_devengado: info.total_devengado,
+        n_total_deducciones: info.total_deducciones,
+        // n_neto_pagable: info.neto_pagable,
+        n_estado: info.estado,
+        e_tipo_contrato: info.tipo_contrato
+        // c_rol: info.rol
+      });
+    // .maybeSingle(); 
+
+    if (error) {
+      console.error('Error al buscar usuario:', error.message);
+      return false;
+    } else if (data) {
+      console.log('Usuario encontrado:', data);
+
+      return data;
+    } else {
+      console.log('Usuario no encontrado');
+      return false;
+    }
+  } catch (err) {
+    console.error('Error:', err.message);
+    return false;
+  }
+};
+
+export const modificarProducto = async (roll, info) => {
+  try {
+    const { data, error } = await supabase
+      .from(roll)
+      .update({
+        descripcion: info.descripcion,
+        codigo_producto: info.codigo_producto,
+        cantidad_actual: info.cantidad_actual,
+        cantidad_minima: info.cantidad_minima,
+        precio_unitario: info.precio_unitario,
+        fecha_ultimo_ingreso: info.fecha_ultimo_ingreso,
+        // responsable_id: info.responsable_id
+      })
+      .eq('id', info.id)
+    // .maybeSingle(); 
+
+    if (error) {
+      console.error('Error al buscar usuario:', error.message);
+      return false;
+    } else if (data) {
+      console.log('Usuario encontrado:', data);
+
+      return data;
+    } else {
+      console.log('Usuario no encontrado');
+      return false;
+    }
+  } catch (err) {
+    console.error('Error:', err.message);
+    return false;
+  }
+};
+
 export const guardar_fichar = async (id_usuario, roll_usuario, estado) => {
   try {
     let data, error;
