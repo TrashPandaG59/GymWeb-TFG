@@ -68,7 +68,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import '../assets/ViewStyles/PerfilView.css'
-import { listarTodo } from '@/server'
+import { listarTodo, actualizarPerfil } from '@/server'
 import { useUsuarioStore } from '@/assets/stores/infoUserTemp'
 import Authenticator from '@/components/Authenticator.vue'
 
@@ -86,7 +86,8 @@ function activarEdicion() {
   mensajeGuardado.value = false
 }
 
-function guardarPerfil() {
+
+async function guardarPerfil ()  {
   errorContrasena.value = false
   mensajeGuardado.value = false
 
@@ -99,6 +100,16 @@ function guardarPerfil() {
   if (nuevaContrasena.value) {
     console.log('Guardar nueva contraseña:', nuevaContrasena.value) // aquí se enviaría al servidor
   }
+
+  usuario.value.contrasena = nuevaContrasena.value || usuario.value.contrasena
+  console.log('Usuario:', usuario.value)
+
+
+    const datos = useUsuarioStore().darIdentidadUsuario();
+
+    await actualizarPerfil(datos.id, datos.roll, usuario.value);
+
+
   editandoPerfil.value = false
   mensajeGuardado.value = true
 

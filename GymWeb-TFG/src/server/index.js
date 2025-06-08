@@ -104,6 +104,39 @@ export const listarTodo = async (roll) => {
   }
 };
 
+export const actualizarPerfil = async (id_usuario, roll_usuario, info) => {
+  try {
+    let data, error;
+
+    if (roll_usuario.toLowerCase() === 'cliente') {
+      ({ data, error } = await supabase
+        .from('clientes')
+        .update({ 
+          email: info.email,
+          telefono: info.telefono,
+          fecha_nacimiento: info.fecha_nacimiento,
+          usuario: info.usuario,
+          contrasena: info.contrasena ? await hashear(info.contrasena) : error("No se ha proporcionado una nueva contraseña")
+
+        })
+        .eq('id', id_usuario));
+    } else {
+      ({ data, error } = await supabase
+        .from('empleados')
+        .update({ cod_multifactor: code })
+        .eq('id', id_usuario));
+    }
+
+    if (error) {
+      console.error('Error al fichar :', error.message);
+    } else {
+      console.log('Fichado con éxito:', data);
+    }
+  } catch (err) {
+    console.error('Error:', err.message);
+  }
+};
+
 export const crearUser = async (roll, info) => {
   console.log('Modificando usuario:', info);
   console.log('Rol del usuario:', roll);

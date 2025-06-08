@@ -96,39 +96,63 @@ function cerrar() {
 }
 
 async function loginF() {
-  errorLogin.value = false
+  
+  console.log('Usuario:', usuario.value)
+  console.log('Password:', password.value)
 
-  try {
-    const token = await buscarDobleFactor(usuario.value)
-    const multifactorCorrecto = token.cod_multifactor
-      ? validarDobleFactor(token.cod_multifactor, password.value)
-      : true
+  const haytoken = ref(true)
 
-    if (!multifactorCorrecto) {
-      throw new Error('Código de doble factor incorrecto')
-    }
+  const token = await buscarDobleFactor(usuario.value)
+  console.log("Token de doble factor:", token.cod_multifactor)
+  if (token.cod_multifactor != null) {
+    haytoken.value = validarDobleFactor(token.cod_multifactor, password.value);
+  }
 
-    const resultado = await buscarUser(usuario.value, password.value)
 
-    if (!resultado || !resultado.rol_nombre) {
-      throw new Error('Usuario o contraseña incorrectos')
-    }
+  if (!haytoken.value) {
+    buscarUser(usuario.value, password.value)
+      .then(resultado => {
+        console.log('ResultadoAAA:', resultado)
+        console.log("resultado.rol_nombre: ", resultado.rol_nombre)
+        console.log("IDDDDD :", resultado.id)
+        console.log("tipo_usuario:::::::::::", resultado.tipo_usuario)
+        useUsuarioStore().guardarIdentidadUsuario(resultado.id, resultado.rol_nombre);
 
-    useUsuarioStore().guardarIdentidadUsuario(resultado.id, resultado.rol_nombre)
+        if (resultado.rol_nombre === 'CLIENTE') {
+          router.push({ path: '/clientes' })
+        } else {
+          if (resultado.rol_nombre === 'ENTRENADOR') {
+            router.push({ path: '/personal_limitado' })
+          } else if (resultado.rol_nombre === 'ADMINISTRADOR') {
+            router.push({ path: '/personal' })
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error en el login:', error)
+      })
+  } else {
+    const resultado = token;
+    console.log('Doble factor verificado, resultado:', resultado)
+    console.log('ResultadoAAA:', resultado)
+    console.log("resultado.rol_nombre: ", resultado.rol_nombre)
+    console.log("IDDDDD :", resultado.id)
+    console.log("tipo_usuario:::::::::::", resultado.tipo_usuario)
+    useUsuarioStore().guardarIdentidadUsuario(resultado.id, resultado.rol_nombre);
 
     if (resultado.rol_nombre === 'CLIENTE') {
       router.push({ path: '/clientes' })
-    } else if (resultado.rol_nombre === 'ENTRENADOR') {
-      router.push({ path: '/personal_limitado' })
-    } else if (resultado.rol_nombre === 'ADMINISTRADOR') {
-      router.push({ path: '/personal' })
+    } else {
+      if (resultado.rol_nombre === 'ENTRENADOR') {
+        router.push({ path: '/personal_limitado' })
+      } else if (resultado.rol_nombre === 'ADMINISTRADOR') {
+        router.push({ path: '/personal' })
+      }
     }
-
-    cerrar()
-  } catch (error) {
-    console.error('Login fallido:', error.message)
-    errorLogin.value = true
   }
+
+
+  cerrar()
 }
 
 // --- REGISTRO ---
