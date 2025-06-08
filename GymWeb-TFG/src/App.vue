@@ -2,9 +2,11 @@
   <div id="app">
     <router-view />
   </div>
+  <IA />
 </template>
 
 <script setup>
+import IA from './components/IA.vue';
 </script>
 
 <style>
