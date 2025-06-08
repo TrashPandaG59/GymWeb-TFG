@@ -23,7 +23,20 @@
         <label>Usuario:
           <input v-model="usuarioEditado.usuario" class="form-control mb-2" />
         </label>
+        <label>Nueva contraseña:
+          <input type="password" v-model="nuevaContrasena" class="form-control mb-2" />
+        </label>
+        <label>Confirmar contraseña:
+          <input type="password" v-model="confirmarContrasena" class="form-control mb-2" />
+        </label>
+        <p v-if="errorContrasena" class="login-error-msg">
+          Las contraseñas no coinciden. Por favor, revísalas.
+        </p>
       </div>
+
+      <p v-if="mensajeGuardado" class="login-success-msg">
+        ✅ Perfil actualizado correctamente.
+      </p>
 
       <div class="d-flex gap-2 mt-3">
         <button v-if="!editandoPerfil" class="btn-editar" @click="activarEdicion">Editar perfil</button>
@@ -62,16 +75,36 @@ import Authenticator from '@/components/Authenticator.vue'
 const usuario = ref({})
 const usuarioEditado = ref({})
 const editandoPerfil = ref(false)
+const nuevaContrasena = ref('')
+const confirmarContrasena = ref('')
+const errorContrasena = ref(false)
+const mensajeGuardado = ref(false)
 
 function activarEdicion() {
   usuarioEditado.value = { ...usuario.value }
   editandoPerfil.value = true
+  mensajeGuardado.value = false
 }
 
 function guardarPerfil() {
+  errorContrasena.value = false
+  mensajeGuardado.value = false
+
+  if (nuevaContrasena.value && nuevaContrasena.value !== confirmarContrasena.value) {
+    errorContrasena.value = true
+    return
+  }
+
   usuario.value = { ...usuarioEditado.value }
+  if (nuevaContrasena.value) {
+    console.log('Guardar nueva contraseña:', nuevaContrasena.value) // aquí se enviaría al servidor
+  }
   editandoPerfil.value = false
-  alert('Perfil actualizado con éxito')
+  mensajeGuardado.value = true
+
+  setTimeout(() => {
+    mensajeGuardado.value = false
+  }, 3000)
 }
 
 onMounted(async () => {
@@ -105,3 +138,4 @@ onMounted(async () => {
   }
 })
 </script>
+

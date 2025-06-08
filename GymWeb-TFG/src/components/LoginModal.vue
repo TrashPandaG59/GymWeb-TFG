@@ -15,7 +15,7 @@
 
         <!-- Mensaje de error -->
         <p v-if="errorLogin" class="login-error-msg">
-          Usuario o contraseña incorrectos. Inténtalo de nuevo.
+          Usuario, contraseña o código de doble factor incorrectos. Inténtalo de nuevo.
         </p>
 
         <div class="form-section">
@@ -23,9 +23,8 @@
           <a href="#" @click.prevent="vista = 'registro'; errorLogin = false">Regístrate</a>
         </div>
         <div class="form-section">
-  <button type="button" @click="cerrar" class="btn-cerrar-mini">Cancelar</button>
-</div>
-
+          <button type="button" @click="cerrar" class="btn-cerrar-mini">Cancelar</button>
+        </div>
       </form>
 
       <!-- REGISTRO -->
@@ -45,6 +44,16 @@
         </div>
 
         <button type="submit">Registrarse</button>
+
+        <!-- Mensaje de error de contraseñas -->
+        <p v-if="errorRegistro" class="login-error-msg">
+          Las contraseñas no coinciden. Por favor, revísalas.
+        </p>
+
+        <!-- Mensaje de éxito -->
+        <div v-if="registroExitoso" class="login-success-msg">
+          <p>✅ Enlace de verificación enviado a tu correo para completar el registro.</p>
+        </div>
 
         <div class="form-section">
           ¿Ya tienes cuenta?
@@ -74,6 +83,8 @@ const emit = defineEmits(['close'])
 
 const vista = ref('login')
 const errorLogin = ref(false)
+const errorRegistro = ref(false)
+const registroExitoso = ref(false)
 
 // --- LOGIN ---
 const usuario = ref('')
@@ -81,13 +92,13 @@ const password = ref('')
 
 function cerrar() {
   emit('close')
+  registroExitoso.value = false
 }
 
 async function loginF() {
   errorLogin.value = false
 
   try {
-    // Verificamos doble factor
     const token = await buscarDobleFactor(usuario.value)
     const multifactorCorrecto = token.cod_multifactor
       ? validarDobleFactor(token.cod_multifactor, password.value)
@@ -97,14 +108,12 @@ async function loginF() {
       throw new Error('Código de doble factor incorrecto')
     }
 
-    // Verificamos login
     const resultado = await buscarUser(usuario.value, password.value)
 
     if (!resultado || !resultado.rol_nombre) {
       throw new Error('Usuario o contraseña incorrectos')
     }
 
-    // Guardamos usuario y redirigimos
     useUsuarioStore().guardarIdentidadUsuario(resultado.id, resultado.rol_nombre)
 
     if (resultado.rol_nombre === 'CLIENTE') {
@@ -115,15 +124,12 @@ async function loginF() {
       router.push({ path: '/personal' })
     }
 
-    cerrar() // SOLO si todo fue bien
-
+    cerrar()
   } catch (error) {
     console.error('Login fallido:', error.message)
     errorLogin.value = true
   }
 }
-
-
 
 // --- REGISTRO ---
 const nombre = ref('')
@@ -136,8 +142,11 @@ const contrasena = ref('')
 const confirmarContrasena = ref('')
 
 function registrarF() {
+  errorRegistro.value = false
+  registroExitoso.value = false
+
   if (contrasena.value !== confirmarContrasena.value) {
-    alert('Las contraseñas no coinciden. Por favor, revísalas.')
+    errorRegistro.value = true
     return
   }
 
@@ -160,7 +169,11 @@ function registrarF() {
   const newURL = `${baseUrl}#code=${token}`
 
   enviarCorreo(info.email, newURL)
-  alert("Enlace de verificación enviado a tu correo para completar el registro.")
-  cerrar()
+  registroExitoso.value = true
+
+  setTimeout(() => {
+    cerrar()
+  }, 5000)
 }
 </script>
+

@@ -95,7 +95,6 @@ onMounted(() => {
         .catch(error => {
           console.error('Error en el registro:', error)
         })
-
       modalBtn.value?.click()
     }
   }
