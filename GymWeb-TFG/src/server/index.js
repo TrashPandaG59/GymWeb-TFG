@@ -111,7 +111,7 @@ export const actualizarPerfil = async (id_usuario, roll_usuario, info) => {
     if (roll_usuario.toLowerCase() === 'cliente') {
       ({ data, error } = await supabase
         .from('clientes')
-        .update({ 
+        .update({
           email: info.email,
           telefono: info.telefono,
           fecha_nacimiento: info.fecha_nacimiento,
@@ -459,6 +459,50 @@ export const buscarDobleFactor = async (username) => {
       return false;
     } else if (data) {
       console.log('DATA:', data);
+
+      return data;
+    } else {
+      console.log('Usuario no encontrado');
+      return false;
+    }
+  } catch (err) {
+    console.error('Error:', err.message);
+    return false;
+  }
+};
+
+
+export const modificarCliente = async (roll, info) => {
+  console.log('Modificando usuario:', info);
+  console.log('Rol del usuario:', roll);
+  try {
+    // Si se proporciona una nueva contraseña, hashearla antes de enviar
+    let contrasenaHasheada = info.contrasena;
+    if (contrasenaHasheada) {
+      contrasenaHasheada = await hashear(info.contrasena);
+    }
+
+    const { data, error } = await supabase
+      .rpc(roll, {
+        c_id: info.id,
+        c_nombre: info.nombre,
+        c_apellidos: info.apellidos,
+        c_email: info.email,
+        c_telefono: info.telefono,
+        c_fecha_nacimiento: info.fecha_nacimiento,
+        c_activo: info.activo,
+        c_fecha_registro: info.fecha_registro,
+        n_c_monto: info.monto,
+        n_c_tipo_suscripcion: info.tipo_suscripcion,
+        n_c_fecha_vencimiento: info.fecha_vencimiento,
+      });
+    // .maybeSingle(); 
+
+    if (error) {
+      console.error('Error al buscar usuario:', error.message);
+      return false;
+    } else if (data) {
+      console.log('Usuario encontrado:', data);
 
       return data;
     } else {
