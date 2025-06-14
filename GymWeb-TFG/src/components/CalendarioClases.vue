@@ -61,10 +61,38 @@
           <p v-if="infoCitaDia.capacidad_actual >= infoCitaDia.capacidad_maxima" class="text-danger">Todas las plazas ocupadas</p>
         </div>
         <div v-else class="text-center fs-5 text-muted py-3">
-          No hay nada en este día
+          <div v-if="useUsuarioStore().darIdentidadUsuario().roll === 'ADMINISTRADOR'">
+            <h3>Añadir clase</h3>
+            <div class="mb-3">
+              <label for="clase-select" class="form-label">Clase</label>
+              <input v-model="datosNewClase.nombre" type="text" id="clase-select" class="form-control" placeholder="Nombre de la clase">
+
+            </div>
+            <div class="mb-3">
+              <label for="profesor-select" class="form-label">Profesor</label>
+              <select v-model="datosNewClase.id_entrenador" id="profesor-select" class="form-select">
+              <option disabled value="">Seleccione un profesor</option>
+              <option v-for="profesor in entrenadores" :key="profesor.id" :value="profesor.id">
+                {{ profesor.nombre }} {{ profesor.apellidos }}
+              </option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="profesor-select" class="form-label">Capacidad</label>
+              <input v-model="datosNewClase.capacidad_máxima" type="number" id="capacidad-select" class="form-control" placeholder="Capacidad máxima de alumnos">
+            </div>
+            <div class="mb-3">
+              <label for="profesor-select" class="form-label">Descripcion</label>
+              <textarea v-model="datosNewClase.descripcion" id="descripcion-select" class="form-control" placeholder="Descripción de la clase"></textarea>
+            </div>
+          </div>
+          <div v-else>
+            No hay clases programadas para este día
+          </div>
         </div>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-success" v-on:click="crearClase">Guardar</button>
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
@@ -77,8 +105,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import '../assets/ComponentStyles/Calendario.css'
-import { listarTodo, apuntarse_a_la_Clase } from '@/server'
+import { listarTodo, apuntarse_a_la_Clase, crearClaseNew } from '@/server'
 import { useUsuarioStore } from '@/assets/stores/infoUserTemp'
+
+const datosNewClase = ref({});
 
 const mostrar_calendario = ref('citas-list-ver')
 const citas = ref([])
@@ -166,9 +196,9 @@ const infoCitaDia = ref('No hay nada en este dia')
 const infoCitaDia_plus = ref()
 
 const llamarDIA = (fechaDia, hora) => {
-  console.log("Llamando a la cita del día:", fechaDia, hora);
+  // console.log("Llamando a la cita del día:", fechaDia, hora);
   infoCitaDia_plus.value = {dia: fechaDia, h: hora}; // Limpiar info previa
-  console.log("Llamando a la cita del día:", infoCitaDia_plus.value);
+  // console.log("Llamando a la cita del día:", infoCitaDia_plus.value);
 
   const cita = citas.value.find(cita => {
     const [fecha, horaCompleta] = cita.date.split(' ')
@@ -185,26 +215,38 @@ const llamarDIA = (fechaDia, hora) => {
 
   if (cita) {
     infoCitaDia.value = cita.todosLosDatos;
-    console.log("Cita encontrada:", cita.todosLosDatos)
+    // console.log("Cita encontrada:", cita.todosLosDatos)
   } else {
     infoCitaDia.value = 'No hay nada en este dia';
-    console.log("No hay cita en esa fecha y hora.")
+    // console.log("No hay cita en esa fecha y hora.")
   }
   return infoCitaDia.value;
 }
 
 const apuntarseClase = async () => {
-  console.log("Apuntándose a la clase...", infoCitaDia_plus.value.dia, "  ", infoCitaDia_plus.value.h);
+  // console.log("Apuntándose a la clase...", infoCitaDia_plus.value.dia, "  ", infoCitaDia_plus.value.h);
   apuntarse_a_la_Clase(useUsuarioStore().darIdentidadUsuario().id, infoCitaDia.value.id_clase);
   await actualizarCalendario();
   llamarDIA(infoCitaDia_plus.value.dia, infoCitaDia_plus.value.h)
 }
 
+const crearClase = async () => {
+
+  datosNewClase.value.capacidad_actual = 0; 
+  datosNewClase.value.hora_inicio = `${infoCitaDia_plus.value.h}:00:00`; // Formato de hora
+  datosNewClase.value.hora_fin = `${infoCitaDia_plus.value.h + 1}:00:00`; // Asignar una hora de duración
+  datosNewClase.value.dia = `${infoCitaDia_plus.value.dia.getFullYear()}-${(infoCitaDia_plus.value.dia.getMonth() + 1).toString().padStart(2, '0')}-${infoCitaDia_plus.value.dia.getDate().toString().padStart(2, '0')}`;
+
+  // console.log("Creando clase...", datosNewClase.value);
+  
+  await crearClaseNew(datosNewClase.value);
+}
+
 const actualizarCalendario = async () => {
   citas.value = []; // Limpiar citas antes de actualizar
-  console.log("Actualizando calendario...");
+  // console.log("Actualizando calendario...");
   const clases = await listarTodo('v_profesor_clases');
-  console.log("clases: ", clases);
+  // console.log("clases: ", clases);
 
   clases.forEach(clase => {
     const [anio, mes, dia] = clase.dia.split("-");
@@ -212,11 +254,16 @@ const actualizarCalendario = async () => {
     citas.value.push({ date: citaFormateada, todosLosDatos: clase });
   });
 
-  console.log("citas: ", citas.value[0].todosLosDatos);
+  // console.log("citas: ", citas.value[0].todosLosDatos);
 }
 
+const entrenadores = ref(null);
+
 onMounted( async() => { 
-  
+
+  entrenadores.value = (await listarTodo('v_perfil_empleados')).filter(entrenador => entrenador.rol === 'ENTRENADOR');
+  // console.log("clasesSSSSSSSS: ", entrenadores.value);
+
   actualizarCalendario();
 
 })

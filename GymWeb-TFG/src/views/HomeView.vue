@@ -84,7 +84,7 @@ onMounted(() => {
 
       const infoStore = useUsuarioStore().cargarInfo();
 
-      console.log("useUsuarioStore().cargarInfo(info) desde modal: ",infoStore);
+      // console.log("useUsuarioStore().cargarInfo(info) desde modal: ",infoStore);
 
       useUsuarioStore().eliminarToken();
 
@@ -103,7 +103,7 @@ onMounted(() => {
   gsap.from('.hero', { duration: 1, opacity: 0, y: -50 });
   gsap.from('.features', { duration: 1, opacity: 0, y: 50, stagger: 0.2 });
 
-  console.log(Draggable); // Esto debería mostrar el objeto Draggable en la consola
+  // console.log(Draggable); // Esto debería mostrar el objeto Draggable en la consola
   Draggable.create("#move", {
     type: "x,y",
     bounds: "body"

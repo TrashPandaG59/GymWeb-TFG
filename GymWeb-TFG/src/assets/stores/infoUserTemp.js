@@ -24,7 +24,7 @@ export const useUsuarioStore = defineStore('usuario', () => {
 
   const guardarInfo = (userInfo) => {
     info.value = { ...userInfo };
-    console.log('Guardando info:', info.value);
+    // console.log('Guardando info:', info.value);
     localStorage.setItem('info', JSON.stringify(info.value));
   };
 
@@ -32,7 +32,7 @@ export const useUsuarioStore = defineStore('usuario', () => {
     const data = localStorage.getItem('info');
     if (data) {
       info.value = JSON.parse(data);
-      console.log('Cargando info:', info.value);
+      // console.log('Cargando info:', info.value);
       const { token, ...usuarioSinToken } = info.value;
       return usuarioSinToken;
     }
@@ -41,13 +41,13 @@ export const useUsuarioStore = defineStore('usuario', () => {
   // NUEVAS FUNCIONES PARA id y roll
   const guardarIdentidadUsuario = ( id, roll ) => {
     const identidad = { id, roll };
-    console.log('Guardando identidad del usuario:', identidad);
+    // console.log('Guardando identidad del usuario:', identidad);
     localStorage.setItem('identidad_usuario', JSON.stringify(identidad));
   };
 
   const darIdentidadUsuario = () => {
     const data = localStorage.getItem('identidad_usuario');
-    console.log('Datos de identidad del usuario:', data);
+    // console.log('Datos de identidad del usuario:', data);
     if (data) {
       return JSON.parse(data);
     }

@@ -84,6 +84,6 @@ const citas = ref([]);
 
 onMounted( async() => { 
   citas.value = await listarTodo('v_clases');
-  console.log("clases: ", citas.value);
+  // console.log("clases: ", citas.value);
 })
 </script>

@@ -97,13 +97,13 @@ function cerrar() {
 
 async function loginF() {
   
-  console.log('Usuario:', usuario.value)
-  console.log('Password:', password.value)
+  // console.log('Usuario:', usuario.value)
+  // console.log('Password:', password.value)
 
   const haytoken = ref(true)
 
   const token = await buscarDobleFactor(usuario.value)
-  console.log("Token de doble factor:", token.cod_multifactor)
+  // console.log("Token de doble factor:", token.cod_multifactor)
   if (token.cod_multifactor != null) {
     haytoken.value = validarDobleFactor(token.cod_multifactor, password.value);
   }
@@ -112,10 +112,10 @@ async function loginF() {
   if (!haytoken.value) {
     buscarUser(usuario.value, password.value)
       .then(resultado => {
-        console.log('ResultadoAAA:', resultado)
-        console.log("resultado.rol_nombre: ", resultado.rol_nombre)
-        console.log("IDDDDD :", resultado.id)
-        console.log("tipo_usuario:::::::::::", resultado.tipo_usuario)
+        // console.log('ResultadoAAA:', resultado)
+        // console.log("resultado.rol_nombre: ", resultado.rol_nombre)
+        // console.log("IDDDDD :", resultado.id)
+        // console.log("tipo_usuario:::::::::::", resultado.tipo_usuario)
         useUsuarioStore().guardarIdentidadUsuario(resultado.id, resultado.rol_nombre);
 
         if (resultado.rol_nombre === 'CLIENTE') {
@@ -133,11 +133,11 @@ async function loginF() {
       })
   } else {
     const resultado = token;
-    console.log('Doble factor verificado, resultado:', resultado)
-    console.log('ResultadoAAA:', resultado)
-    console.log("resultado.rol_nombre: ", resultado.rol_nombre)
-    console.log("IDDDDD :", resultado.id)
-    console.log("tipo_usuario:::::::::::", resultado.tipo_usuario)
+    // console.log('Doble factor verificado, resultado:', resultado)
+    // console.log('ResultadoAAA:', resultado)
+    // console.log("resultado.rol_nombre: ", resultado.rol_nombre)
+    // console.log("IDDDDD :", resultado.id)
+    // console.log("tipo_usuario:::::::::::", resultado.tipo_usuario)
     useUsuarioStore().guardarIdentidadUsuario(resultado.id, resultado.rol_nombre);
 
     if (resultado.rol_nombre === 'CLIENTE') {

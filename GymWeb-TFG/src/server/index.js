@@ -9,7 +9,7 @@ const hashear = async (password) => {
 
   try {
     const hash = await bcrypt.hash(password, manualSalt);
-    console.log('Contraseña hasheada con salt "Ensaimadas en mallas":', hash);
+    // console.log('Contraseña hasheada con salt "Ensaimadas en mallas":', hash);
     return hash;
   } catch (err) {
     console.error('Error al hashear la contraseña:', err);
@@ -25,7 +25,7 @@ const supabase = createClient(
 
 export const buscarUser = async (username, pass) => {
   const hashedPass = await hashear(pass);
-  console.log('Buscando usuario:', username, hashedPass);
+  // console.log('Buscando usuario:', username, hashedPass);
   try {
     const { data, error } = await supabase
       .from('v_validar_usuario')
@@ -38,13 +38,13 @@ export const buscarUser = async (username, pass) => {
       console.error('Error al buscar usuario:', error.message);
       return false;
     } else if (data) {
-      console.log('Usuario encontrado:', data.usuario);
-      console.log('Usuario ROLL:', data.rol_nombre);
-      console.log('DATA:', data);
+      // console.log('Usuario encontrado:', data.usuario);
+      // console.log('Usuario ROLL:', data.rol_nombre);
+      // console.log('DATA:', data);
 
       return data;
     } else {
-      console.log('Usuario no encontrado');
+      // console.log('Usuario no encontrado');
       return false;
     }
   } catch (err) {
@@ -57,7 +57,7 @@ export const insertarUsuario = async (info) => {
   try {
 
     info.contrasena = await hashear(info.contrasena);
-    console.log('Insertando usuario:', info);
+    // console.log('Insertando usuario:', info);
     const { data, error } = await supabase
       .rpc('p_alta_cliente', {
         c_apellidos: info.apellidos,
@@ -72,7 +72,7 @@ export const insertarUsuario = async (info) => {
     if (error) {
       console.error('Error al guardar el usuario:', error.message);
     } else {
-      console.log('Usuario guardado con éxito:', data);
+      // console.log('Usuario guardado con éxito:', data);
     }
   } catch (err) {
     console.error('Error:', err.message);
@@ -91,11 +91,11 @@ export const listarTodo = async (roll) => {
       console.error('Error al buscar usuario:', error.message);
       return false;
     } else if (data) {
-      console.log('Usuario encontrado:', data);
+      // console.log('Usuario encontrado:', data);
 
       return data;
     } else {
-      console.log('Usuario no encontrado');
+      // console.log('Usuario no encontrado');
       return false;
     }
   } catch (err) {
@@ -130,7 +130,7 @@ export const actualizarPerfil = async (id_usuario, roll_usuario, info) => {
     if (error) {
       console.error('Error al fichar :', error.message);
     } else {
-      console.log('Fichado con éxito:', data);
+      // console.log('Fichado con éxito:', data);
     }
   } catch (err) {
     console.error('Error:', err.message);
@@ -138,8 +138,8 @@ export const actualizarPerfil = async (id_usuario, roll_usuario, info) => {
 };
 
 export const crearUser = async (roll, info) => {
-  console.log('Modificando usuario:', info);
-  console.log('Rol del usuario:', roll);
+  // console.log('Modificando usuario:', info);
+  // console.log('Rol del usuario:', roll);
   try {
     // Si se proporciona una nueva contraseña, hashearla antes de enviar
     let contrasenaHasheada = info.contrasena;
@@ -174,11 +174,11 @@ export const crearUser = async (roll, info) => {
       console.error('Error al buscar usuario:', error.message);
       return false;
     } else if (data) {
-      console.log('Usuario encontrado:', data);
+      // console.log('Usuario encontrado:', data);
 
       return data;
     } else {
-      console.log('Usuario no encontrado');
+      // console.log('Usuario no encontrado');
       return false;
     }
   } catch (err) {
@@ -188,8 +188,8 @@ export const crearUser = async (roll, info) => {
 };
 
 export const modificarUser = async (roll, info) => {
-  console.log('Modificando usuario:', info);
-  console.log('Rol del usuario:', roll);
+  // console.log('Modificando usuario:', info);
+  // console.log('Rol del usuario:', roll);
   try {
     // Si se proporciona una nueva contraseña, hashearla antes de enviar
     let contrasenaHasheada = info.contrasena;
@@ -225,11 +225,11 @@ export const modificarUser = async (roll, info) => {
       console.error('Error al buscar usuario:', error.message);
       return false;
     } else if (data) {
-      console.log('Usuario encontrado:', data);
+      // console.log('Usuario encontrado:', data);
 
       return data;
     } else {
-      console.log('Usuario no encontrado');
+      // console.log('Usuario no encontrado');
       return false;
     }
   } catch (err) {
@@ -258,11 +258,11 @@ export const modificarProducto = async (roll, info) => {
       console.error('Error al buscar usuario:', error.message);
       return false;
     } else if (data) {
-      console.log('Usuario encontrado:', data);
+      // console.log('Usuario encontrado:', data);
 
       return data;
     } else {
-      console.log('Usuario no encontrado');
+      // console.log('Usuario no encontrado');
       return false;
     }
   } catch (err) {
@@ -305,7 +305,7 @@ export const guardar_fichar = async (id_usuario, roll_usuario, estado) => {
     if (error) {
       console.error('Error al fichar :', error.message);
     } else {
-      console.log('Fichado con éxito:', data);
+      // console.log('Fichado con éxito:', data);
     }
   } catch (err) {
     console.error('Error:', err.message);
@@ -347,7 +347,7 @@ export const guardar_salida = async (id_usuario, roll_usuario, estado) => {
     if (error) {
       console.error('Error al hacer update:', error.message);
     } else {
-      console.log('Registro actualizado:', data);
+      // console.log('Registro actualizado:', data);
     }
   } catch (err) {
     console.error('Error inesperado:', err.message);
@@ -357,8 +357,8 @@ export const guardar_salida = async (id_usuario, roll_usuario, estado) => {
 
 
 export const obtener_hora_entrada = async (id_usuario, roll) => {
-  console.log('Obteniendo hora de entrada para el usuario:', id_usuario);
-  console.log('Rol del usuario:', roll);
+  // console.log('Obteniendo hora de entrada para el usuario:', id_usuario);
+  // console.log('Rol del usuario:', roll);
 
   let tipo_user, tabla;
 
@@ -371,8 +371,8 @@ export const obtener_hora_entrada = async (id_usuario, roll) => {
   }
 
 
-  console.log('Tipo de usuario:', tipo_user);
-  console.log('Tabla:', tabla);
+  // console.log('Tipo de usuario:', tipo_user);
+  // console.log('Tabla:', tabla);
 
   try {
     const { data, error } = await supabase
@@ -387,11 +387,11 @@ export const obtener_hora_entrada = async (id_usuario, roll) => {
       console.error('Error al buscar usuario:', error.message);
       return false;
     } else if (data) {
-      console.log('Usuario encontrado:', data.estado);
+      // console.log('Usuario encontrado:', data.estado);
 
       return data.estado;
     } else {
-      console.log('Usuario no encontrado');
+      // console.log('Usuario no encontrado');
       return false;
     }
   } catch (err) {
@@ -403,7 +403,7 @@ export const obtener_hora_entrada = async (id_usuario, roll) => {
 export const apuntarse_a_la_Clase = async (id_user, id_clase) => {
   try {
 
-    console.log('Apuntando al usuario:', id_user, 'a la clase:', id_clase);
+    // console.log('Apuntando al usuario:', id_user, 'a la clase:', id_clase);
     const { data, error } = await supabase
       .rpc('p_clase_cliente', {
         c_clase_id: id_clase,
@@ -413,7 +413,7 @@ export const apuntarse_a_la_Clase = async (id_user, id_clase) => {
     if (error) {
       console.error('Error al unirse a la clase:', error.message);
     } else {
-      console.log('Usuario registrado en clase con éxito:', data);
+      // console.log('Usuario registrado en clase con éxito:', data);
     }
   } catch (err) {
     console.error('Error:', err.message);
@@ -439,7 +439,7 @@ export const guardarDobleFactor = async (id_usuario, roll_usuario, code) => {
     if (error) {
       console.error('Error al fichar :', error.message);
     } else {
-      console.log('Fichado con éxito:', data);
+      // console.log('Fichado con éxito:', data);
     }
   } catch (err) {
     console.error('Error:', err.message);
@@ -458,11 +458,11 @@ export const buscarDobleFactor = async (username) => {
       console.error('Error al buscar usuario:', error.message);
       return false;
     } else if (data) {
-      console.log('DATA:', data);
+      // console.log('DATA:', data);
 
       return data;
     } else {
-      console.log('Usuario no encontrado');
+      // console.log('Usuario no encontrado');
       return false;
     }
   } catch (err) {
@@ -473,8 +473,8 @@ export const buscarDobleFactor = async (username) => {
 
 
 export const modificarCliente = async (roll, info) => {
-  console.log('Modificando usuario:', info);
-  console.log('Rol del usuario:', roll);
+  // console.log('Modificando usuario:', info);
+  // console.log('Rol del usuario:', roll);
   try {
     // Si se proporciona una nueva contraseña, hashearla antes de enviar
     let contrasenaHasheada = info.contrasena;
@@ -502,16 +502,50 @@ export const modificarCliente = async (roll, info) => {
       console.error('Error al buscar usuario:', error.message);
       return false;
     } else if (data) {
-      console.log('Usuario encontrado:', data);
+      // console.log('Usuario encontrado:', data);
 
       return data;
     } else {
-      console.log('Usuario no encontrado');
+      // console.log('Usuario no encontrado');
       return false;
     }
   } catch (err) {
     console.error('Error:', err.message);
     return false;
+  }
+};
+
+export const crearClaseNew = async (info) => {
+  try {
+    let data, error;
+
+    const now = new Date();
+
+    const fecha = now.toISOString().split('T')[0]; // "YYYY-MM-DD"
+    const hora = now.toTimeString().split(' ')[0]; // "HH:MM:SS"
+
+      ({ data, error } = await supabase.from('clases').insert([
+        {
+          nombre : info.nombre,
+          hora_inicio : info.hora_inicio,
+          hora_fin : info.hora_fin,
+          capacidad_actual : info.capacidad_actual,
+          capacidad_maxima : info.capacidad_máxima,
+          id_entrenador : info.id_entrenador,
+          dia : info.dia,
+          descripcion : info.descripcion
+        }
+      ]));
+
+    if (error) {
+      console.error('Error al fichar :', error.message);
+      alert('Error al crear la clase');
+    } else {
+      alert('Clase creada con éxito');
+      // console.log('Fichado con éxito:', data);
+    }
+  } catch (err) {
+    console.error('Error:', err.message);
   }
 };
 

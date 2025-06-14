@@ -98,11 +98,11 @@ async function guardarPerfil ()  {
 
   usuario.value = { ...usuarioEditado.value }
   if (nuevaContrasena.value) {
-    console.log('Guardar nueva contraseña:', nuevaContrasena.value) // aquí se enviaría al servidor
+    // console.log('Guardar nueva contraseña:', nuevaContrasena.value) // aquí se enviaría al servidor
   }
 
   usuario.value.contrasena = nuevaContrasena.value || usuario.value.contrasena
-  console.log('Usuario:', usuario.value)
+  // console.log('Usuario:', usuario.value)
 
 
     const datos = useUsuarioStore().darIdentidadUsuario();

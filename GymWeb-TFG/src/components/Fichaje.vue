@@ -47,7 +47,7 @@ function fichar() {
 
   const IdentidadUsuario = useUsuarioStore().darIdentidadUsuario();
 
-  console.log("ID Usuario:", IdentidadUsuario.id, "::", IdentidadUsuario.roll)
+  // console.log("ID Usuario:", IdentidadUsuario.id, "::", IdentidadUsuario.roll)
 
 
    estado.value = !estado.value
@@ -72,7 +72,7 @@ onMounted(async () => {
   const IdentidadUsuario = useUsuarioStore().darIdentidadUsuario();
 
   estado.value = await obtener_hora_entrada(IdentidadUsuario.id, IdentidadUsuario.roll);
-  console.log("Estado de fichaje:", estado.value);
+  // console.log("Estado de fichaje:", estado.value);
 
   if (estado.value === true) {
     tipoFichaje.value = 'Salida';

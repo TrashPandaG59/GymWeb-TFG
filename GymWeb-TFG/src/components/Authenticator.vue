@@ -49,10 +49,10 @@ function verificarToken () {
 
   if (verificado.value) {
     const infoUser = useUsuarioStore().darIdentidadUsuario()
-    console.log('infoUserinfoUser:', infoUser)
+    // console.log('infoUserinfoUser:', infoUser)
     guardarDobleFactor(infoUser.id, infoUser.roll, secret.value)
   } else {
-    console.log('Código incorrecto:', userToken.value)
+    // console.log('Código incorrecto:', userToken.value)
   }
 }
 </script>

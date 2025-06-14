@@ -45,7 +45,7 @@ function agregarMensaje(role, author, text) {
 }
 
 onMounted(async () => {
-  const url = `https://cool-aloisia-serveeeer-1745206a.koyeb.app/chat/${datosBase.Chat_ID}?token=${datosBase.User_Token}`;
+  const url = `http://127.0.0.1:8000/chat/${datosBase.Chat_ID}?token=${datosBase.User_Token}`;
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -63,11 +63,11 @@ onMounted(async () => {
 async function enviarMensaje() {
   const texto = mensaje.value.trim();
   if (!texto) return;
-  agregarMensaje('user', 'Tú', texto);
+  agregarMensaje('user', 'PurpleBirds9148', texto);
   mensaje.value = '';
 
   try {
-    const res = await fetch('https://cool-aloisia-serveeeer-1745206a.koyeb.app/enviar', {
+    const res = await fetch('http://127.0.0.1:8000/enviar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...datosBase, mensaje: texto })

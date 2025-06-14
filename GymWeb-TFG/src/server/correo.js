@@ -21,7 +21,7 @@ const templateParams = {
 
   emailjs.send("service_m0vsrok", "template_imvq4sc", templateParams)
     .then(function (response) {
-      console.log("Correo enviado correctamente:", response.status, response.text);
+      // console.log("Correo enviado correctamente:", response.status, response.text);
     }, function (error) {
       console.error("Error al enviar correo:", error);
     });
