@@ -96,26 +96,35 @@ function cerrar() {
 }
 
 async function loginF() {
-  
+
+  /* 1️⃣  Limpiar cualquier mensaje anterior */
+  errorLogin.value = false;                    // 👈 añadido
+
   // console.log('Usuario:', usuario.value)
   // console.log('Password:', password.value)
 
   const haytoken = ref(true)
 
   const token = await buscarDobleFactor(usuario.value)
-  // console.log("Token de doble factor:", token.cod_multifactor)
+  if (!token) {
+    console.error('No se encontró token de doble factor para el usuario:', usuario.value);
+    haytoken.value = false;
+  }
+  console.log("Token de doble factor:", token)
   if (token.cod_multifactor != null) {
     haytoken.value = validarDobleFactor(token.cod_multifactor, password.value);
   }
 
-
   if (!haytoken.value) {
     buscarUser(usuario.value, password.value)
       .then(resultado => {
-        // console.log('ResultadoAAA:', resultado)
-        // console.log("resultado.rol_nombre: ", resultado.rol_nombre)
-        // console.log("IDDDDD :", resultado.id)
-        // console.log("tipo_usuario:::::::::::", resultado.tipo_usuario)
+
+        /* 2️⃣  Si el back-end no devuelve usuario válido → marcar error */
+        if (!resultado || !resultado.rol_nombre) {   // 👈 añadido
+          errorLogin.value = true;                   // 👈 añadido
+          return;                                   // 👈 añadido
+        }
+
         useUsuarioStore().guardarIdentidadUsuario(resultado.id, resultado.rol_nombre);
 
         if (resultado.rol_nombre === 'CLIENTE') {
@@ -130,14 +139,11 @@ async function loginF() {
       })
       .catch(error => {
         console.error('Error en el login:', error)
+        errorLogin.value = true;                 // 👈 añadido
       })
   } else {
     const resultado = token;
-    // console.log('Doble factor verificado, resultado:', resultado)
-    // console.log('ResultadoAAA:', resultado)
-    // console.log("resultado.rol_nombre: ", resultado.rol_nombre)
-    // console.log("IDDDDD :", resultado.id)
-    // console.log("tipo_usuario:::::::::::", resultado.tipo_usuario)
+
     useUsuarioStore().guardarIdentidadUsuario(resultado.id, resultado.rol_nombre);
 
     if (resultado.rol_nombre === 'CLIENTE') {
@@ -151,9 +157,9 @@ async function loginF() {
     }
   }
 
-
-  cerrar()
+  // cerrar()
 }
+
 
 // --- REGISTRO ---
 const nombre = ref('')
