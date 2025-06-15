@@ -1,79 +1,4 @@
-<style scoped>
-.card {
-  background: #f4f7fb;
-  border-radius: 20px;
-  padding: 30px;
-  max-width: 800px;
-  margin: 40px auto;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
 
-.title {
-  font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 20px;
-  color: #1f2a52;
-  text-align: center;
-}
-
-.user__container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.user {
-  background: white;
-  border-radius: 12px;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-}
-
-.user:hover {
-  background: #eef2f8;
-}
-
-.name {
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-.username {
-  font-size: 0.95rem;
-  color: #777;
-}
-
-.follow {
-  background-color: #2575fc;
-  color: #fff;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-.follow:hover {
-  background-color: #1a57c5;
-}
-
-.more {
-  display: block;
-  text-align: center;
-  margin-top: 20px;
-  font-weight: 600;
-  color: #2575fc;
-  text-decoration: none;
-}
-
-.more:hover {
-  text-decoration: underline;
-}
-</style>
 <template>
   <div class="card">
     <p class="title">Listado Clientes</p>
@@ -177,7 +102,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { listarTodo, modificarCliente } from '@/server'
-
+import "../assets/ComponentStyles/ListaClientes.css"
 const clientes = ref([])
 const cliente = ref({})
 const clienteEditado = ref({})

@@ -25,7 +25,7 @@
 
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
-
+import "../assets/ComponentStyles/IA.css"
 const mensaje = ref('');
 const mensajes = ref([]);
 const chatMessages = ref(null);
@@ -45,7 +45,7 @@ function agregarMensaje(role, author, text) {
 }
 
 onMounted(async () => {
-  const url = `http://127.0.0.1:8000/chat/${datosBase.Chat_ID}?token=${datosBase.User_Token}`;
+  const url = `http://useless-kay-fsdgfgfdsvsfd-d36b1b88.koyeb.app/chat/${datosBase.Chat_ID}?token=${datosBase.User_Token}`;
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -67,7 +67,7 @@ async function enviarMensaje() {
   mensaje.value = '';
 
   try {
-    const res = await fetch('http://127.0.0.1:8000/enviar', {
+    const res = await fetch('http://useless-kay-fsdgfgfdsvsfd-d36b1b88.koyeb.app/enviar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...datosBase, mensaje: texto })
@@ -85,45 +85,3 @@ async function enviarMensaje() {
   }
 }
 </script>
-
-<style scoped>
-.chat-container {
-  max-width: 600px;
-  margin: auto;
-  padding: 1rem;
-  border: 2px solid #ccc;
-  border-radius: 12px;
-  background: #f9f9f9;
-}
-.chat-messages {
-  max-height: 400px;
-  overflow-y: auto;
-  margin-bottom: 1rem;
-}
-.chat-messages .user {
-  text-align: right;
-  background-color: #e0f7fa;
-  margin: 5px;
-  padding: 8px;
-  border-radius: 10px;
-}
-.chat-messages .bot {
-  text-align: left;
-  background-color: #fff3e0;
-  margin: 5px;
-  padding: 8px;
-  border-radius: 10px;
-}
-.chat-input {
-  display: flex;
-  gap: 0.5rem;
-}
-.chat-input input {
-  flex: 1;
-  padding: 0.5rem;
-  font-size: 1rem;
-}
-.chat-input button {
-  padding: 0.5rem 1rem;
-}
-</style>
