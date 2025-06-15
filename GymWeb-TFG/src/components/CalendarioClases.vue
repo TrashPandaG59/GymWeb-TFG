@@ -92,7 +92,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" v-on:click="crearClase">Guardar</button>
+        <button type="button" class="btn btn-success" v-on:click="crearClase" v-if="useUsuarioStore().darIdentidadUsuario().roll === 'ADMINISTRADOR'" >Guardar</button>
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
@@ -232,13 +232,13 @@ const apuntarseClase = async () => {
 
 const crearClase = async () => {
 
-  datosNewClase.value.capacidad_actual = 0; 
+  datosNewClase.value.capacidad_actual = 0;
   datosNewClase.value.hora_inicio = `${infoCitaDia_plus.value.h}:00:00`; // Formato de hora
   datosNewClase.value.hora_fin = `${infoCitaDia_plus.value.h + 1}:00:00`; // Asignar una hora de duración
   datosNewClase.value.dia = `${infoCitaDia_plus.value.dia.getFullYear()}-${(infoCitaDia_plus.value.dia.getMonth() + 1).toString().padStart(2, '0')}-${infoCitaDia_plus.value.dia.getDate().toString().padStart(2, '0')}`;
 
   // console.log("Creando clase...", datosNewClase.value);
-  
+
   await crearClaseNew(datosNewClase.value);
 }
 
@@ -259,7 +259,7 @@ const actualizarCalendario = async () => {
 
 const entrenadores = ref(null);
 
-onMounted( async() => { 
+onMounted( async() => {
 
   entrenadores.value = (await listarTodo('v_perfil_empleados')).filter(entrenador => entrenador.rol === 'ENTRENADOR');
   // console.log("clasesSSSSSSSS: ", entrenadores.value);
