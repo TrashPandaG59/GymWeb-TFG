@@ -1,6 +1,6 @@
 <template>
   <div class="chat-container">
-    <h2>Chat con IA</h2>
+    <h3>Chat con IA</h3>
     <div class="chat-messages" ref="chatMessages">
       <div
         v-for="(msg, index) in mensajes"
