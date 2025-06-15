@@ -65,7 +65,12 @@ function handleClick(endpoint) {
 
     <!-- vistaespecial aparece encima con animación -->
     <transition name="fall-down">
-        <vistaespecial v-if="showvistaespecial" class="vistaespecial-overlay" />
+        <div v-if="showvistaespecial" class="vistaespecial-overlay">
+            <button @click="showvistaespecial = false" class="btn btn-danger" style="position:absolute;top:10px;right:100px;z-index:10000;">
+                Cerrar
+            </button>
+            <vistaespecial />
+        </div>
     </transition>
 </div>
 </template>
