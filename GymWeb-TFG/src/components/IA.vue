@@ -45,7 +45,7 @@ function agregarMensaje(role, author, text) {
 }
 
 onMounted(async () => {
-  const url = `http://useless-kay-fsdgfgfdsvsfd-d36b1b88.koyeb.app/chat/${datosBase.Chat_ID}?token=${datosBase.User_Token}`;
+  const url = `https://unique-sarajane-fsdgfgfdsvsfd-5e430f4b.koyeb.app/chat/${datosBase.Chat_ID}?token=${datosBase.User_Token}`;
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -67,7 +67,7 @@ async function enviarMensaje() {
   mensaje.value = '';
 
   try {
-    const res = await fetch('http://useless-kay-fsdgfgfdsvsfd-d36b1b88.koyeb.app/enviar', {
+    const res = await fetch('https://unique-sarajane-fsdgfgfdsvsfd-5e430f4b.koyeb.app/enviar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...datosBase, mensaje: texto })
