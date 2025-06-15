@@ -1,6 +1,6 @@
 <template>
   <div class="chat-container">
-    <h3>Chat con IA</h3>
+    <h3>Chat con IA <p>BETA</p></h3>
     <div class="chat-messages" ref="chatMessages">
       <div
         v-for="(msg, index) in mensajes"
@@ -32,9 +32,9 @@ const chatMessages = ref(null);
 
 const datosBase = {
   User_Token: '355192d5442d295778034397e2c89dc17844acf3',
-  Character_ID: 'I9ZgVpUO-VtwAub1uW3NK9Kekfi3LwzmPj1mPFLzhKE',
+  Character_ID: 'onLZRQUZ3_OT2RpNTxgomFKTi5c25w1NftW4v3PTVdU',
   Voz: 'Si',
-  Chat_ID: 'eeafafd0-0938-49cc-9fe7-0ad52853bde5'
+  Chat_ID: '60f4e351-dc68-45bf-ae7d-29951c75cfc3'
 };
 
 function agregarMensaje(role, author, text) {
