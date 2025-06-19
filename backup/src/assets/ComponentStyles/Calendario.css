@@ -1,0 +1,130 @@
+.mostrado {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 60px auto;
+  background: #1f1f2b;
+  color: #f0f0f0;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  font-family: 'Open Sans', sans-serif;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+/* Título */
+h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* Controles del calendario */
+.calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.calendar-controls button {
+  background-color: #2575fc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+.calendar-controls button:hover {
+  background-color: #1a4ec6;
+}
+
+/* Fecha actual */
+.fecha-info,
+.fecha-actual {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #2a2a38;
+  padding: 8px 16px;
+  border-radius: 10px;
+}
+
+/* Tabla del calendario */
+.calendar {
+  width: 100%;
+  min-width: 800px; /* para que en móvil tenga scroll horizontal */
+  border-collapse: separate;
+  border-spacing: 4px;
+  table-layout: fixed;
+}
+
+.calendar th {
+  background-color: #292b38;
+  color: #fff;
+  font-weight: 600;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.calendar td {
+  background-color: #2e2f3a;
+  height: 50px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
+}
+
+/* Hora lateral */
+.calendar td:first-child {
+  background-color: #20222b;
+  font-weight: bold;
+  color: #ccc;
+}
+
+/* Celda ocupada */
+.ocupado {
+  background-color: #ff4d4f !important;
+  color: white;
+  font-weight: bold;
+}
+
+/* 🔁 Responsive ajustes para móvil */
+@media (max-width: 768px) {
+  .calendar-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .calendar-controls button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .fecha-info,
+  .fecha-actual {
+    justify-content: center;
+    font-size: 1rem;
+    padding: 6px 12px;
+  }
+
+  .mostrado {
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+}
